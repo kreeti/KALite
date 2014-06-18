@@ -1,6 +1,7 @@
 package com.example.json;
 
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -35,7 +36,7 @@ public class MainActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main_activity_layout);		
 		StringBuffer sb = new StringBuffer();
 		BufferedReader br = null;
 		try {
@@ -47,13 +48,7 @@ public class MainActivity extends ListActivity {
 				sb.append(temp);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				br.close(); // stop reading
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 	    String myjsonstring = sb.toString();
 		JSONTokener tokener = new JSONTokener(myjsonstring);
 		// JSON FILE PARSING
