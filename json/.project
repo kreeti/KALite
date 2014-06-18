@@ -30,11 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>assets/topics.json</name>
-			<type>1</type>
-			<location>C:/Users/Jaju/Downloads/topics.json</location>
-		</link>
-	</linkedResources>
 </projectDescription>

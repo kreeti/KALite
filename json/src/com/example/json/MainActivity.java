@@ -1,7 +1,7 @@
 package com.example.json;
 
 import java.io.BufferedReader;
-
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -38,14 +38,11 @@ public class MainActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity_layout);		
 		StringBuffer sb = new StringBuffer();
-		BufferedReader br = null;
+		
 		try {
-			br = new BufferedReader(new InputStreamReader(getAssets().open(
-					"topics.json")));
-			String temp;
-			 
-			while ((temp = br.readLine()) != null)
-				sb.append(temp);
+			BufferedReader br = new BufferedReader(new InputStreamReader(this.getResources().openRawResource(com.example.json.R.raw.topics)));			
+			String temp;			 
+			while ((temp = br.readLine()) != null) sb.append(temp);				
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
