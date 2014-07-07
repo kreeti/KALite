@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 public class BaseListActivity extends ListActivity {
 	public JSONArray jsonArray;
+	public JSONObject baseJobj;
     public JSONObject jobj;
     public String topic;    
     public String[] subjectArray;
@@ -48,8 +49,9 @@ public class BaseListActivity extends ListActivity {
 			subject = new ArrayList<String>();
 			allChildrens = new ArrayList<JSONObject>();
 			if(jsonObject == null){
-				String s = loadJSONFromAsset();
+				String s = loadJSONFromAsset();				 
 				jsonObj = new JSONObject(s);
+				baseJobj = jsonObj;
 			}else{
 				jsonObj = jsonObject;
 			}			

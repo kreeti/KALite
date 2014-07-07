@@ -26,15 +26,8 @@ public class MainActivity extends BaseListActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);		
 		context = this;
-		setContentView(R.layout.activity_main);	
-		try {
-			if(jsonObj != null)
-				jsonObj = new JSONObject(getIntent().getStringExtra("jsonObject"));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}			
-		parseJSON(jsonObj);			
+		setContentView(R.layout.activity_main);			
+		parseJSON(null);			
     	lastDisplayedJsonObj.add(allChildrens.get(0));
 		
 		//after parsing the JSON file we need to store all the subjects into subjectsArray and show it in listView
@@ -42,10 +35,10 @@ public class MainActivity extends BaseListActivity{
 		ListView listView = getListView();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
-		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {	
-		    	lastDisplayedPosition++;
-		    	if(allChildrens.size() > 0){
-		    		lastDisplayedJsonObj.add(allChildrens.get(pos));
+		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
+		    	if(allChildrens.size() > 0){	
+		    		lastDisplayedPosition++;
+		    		lastDisplayedJsonObj.add(allChildrens.get(pos));		    		
 		    		parseJSON(allChildrens.get(pos));
 			    	setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));
 		    	}else{
@@ -62,10 +55,14 @@ public class MainActivity extends BaseListActivity{
 	 @Override 
      public void onBackPressed()    { 		
 		lastDisplayedPosition--;	 	
-		if(lastDisplayedPosition <= 0){			 
-			 return;		 	
+		if(lastDisplayedPosition < 0){			 
+			lastDisplayedPosition = 0;		 	
 		 }
-		 parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));		 
+		if(lastDisplayedPosition == 0){
+			parseJSON(baseJobj);
+		}else{
+			parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
+		}		 		 
 		 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	 
 		 
      } 
