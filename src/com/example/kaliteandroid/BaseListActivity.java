@@ -64,9 +64,9 @@ public class BaseListActivity extends ListActivity {
 	                if(jsonObj.has("title"))
 	                	subject.add(jsonObj.getString("title"));	                
 	            }	
-			}else if(jsonObj.has("download_urls")){				 
-                	JSONObject downloadUrlsJson = jsonObj.getJSONObject("download_urls");    
-                	String url = downloadUrlsJson.getString("mp4").replace("http://s3.amazonaws.com/KA-youtube-converted/", "");
+			}else if(jsonObj.has("download_urls")){                	   
+                	String url = jsonObj.getString("id");
+                	url = url+".mp4";
                 	if(url != null && !url.isEmpty())
                 		subject.add(url);               	              		
 			}else
