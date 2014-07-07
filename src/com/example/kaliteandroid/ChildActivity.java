@@ -2,15 +2,17 @@ package com.example.kaliteandroid;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ChildActivity extends BaseListActivity{
+public class ChildActivity extends ListActivity{
 	
     MainActivity m = new MainActivity();
 	String sub = m.topic;			
@@ -20,8 +22,10 @@ public class ChildActivity extends BaseListActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);		
-		try {
+		setContentView(R.layout.activity_child);	
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		this.getActionBar().setDisplayShowHomeEnabled(false);
+		/*try {
 			jsonObj = new JSONObject(getIntent().getStringExtra("jsonObject"));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -41,7 +45,13 @@ public class ChildActivity extends BaseListActivity{
 				childIntent.putExtra("jsonObject", allChildrens.get(pos).toString());
 				ChildActivity.this.startActivity(childIntent);
 		    }
-		});
+		});*/
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		
 	}	
 	
 	
