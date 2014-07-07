@@ -11,12 +11,14 @@ public class VideoPlayerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_media_player);
-		playVideoFromSDCard(getIntent().getStringExtra("videoFileName"));
+		String mountLocation = "/mnt/usb_storage/KhanAcademyVideos/"+getIntent().getStringExtra("videoFileName");
+		playVideoFromSDCard(mountLocation);
 		//playVideoFromSDCard("/SuperBeam/abc.mp4");
 	}
 	
 	public void playVideoFromSDCard(String fileName){
-		Uri vidFile = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+fileName);
+		//Uri vidFile = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+fileName);
+		Uri vidFile = Uri.parse(fileName);
 		VideoView videoView = (VideoView) findViewById(R.id.videoView1);
 		videoView.setVideoURI(vidFile);
 		videoView.setMediaController(new MediaController(this));
