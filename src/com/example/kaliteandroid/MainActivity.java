@@ -45,16 +45,7 @@ public class MainActivity extends BaseListActivity{
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {	
 		    	lastDisplayedPosition++;
 		    	lastDisplayedJsonObj.add(allChildrens.get(pos));
-		    	parseJSON(allChildrens.get(pos));		    	
-		    	try {
-					if(lastDisplayedPosition - 1 >= 0)
-						replaceString(lastDisplayedJsonObj.get(lastDisplayedPosition - 1).get("path"));
-					else
-						replaceString(lastDisplayedJsonObj.get(0).get("path"));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		    	parseJSON(allChildrens.get(pos));
 		    	setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));		    	
 		    }
 		});		
@@ -62,34 +53,15 @@ public class MainActivity extends BaseListActivity{
 	}	
 	
 	 @Override 
-     public void onBackPressed() 
-     { 		
-		 lastDisplayedPosition--;	 	
-		 if(lastDisplayedPosition < 0) return;		 	
-		 parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
-		 try {	
-			 if(lastDisplayedPosition - 1 >= 0)
-				replaceString(lastDisplayedJsonObj.get(lastDisplayedPosition - 1).get("path"));
-			 else
-				replaceString(lastDisplayedJsonObj.get(0).get("path"));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));			
+     public void onBackPressed()    { 		
+		lastDisplayedPosition--;	 	
+		if(lastDisplayedPosition <= 0){			 
+			 return;		 	
+		 }
+		 parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));		 
+		 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	 
 		 
      } 
-	 
-	 public void replaceString(Object object){
-		 List<String> subjectsList = new ArrayList<String>();
-		 for(int i=0; i<subject.size(); i++) {				
-             String string = subject.get(i);
-             string = string.replace((CharSequence) object, "");
-             string = string.replaceAll("/","");
-             subjectsList.add(string);                            
-         }	
-		 subject = subjectsList;
-	 }
 
 	
 }
