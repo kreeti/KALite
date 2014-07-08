@@ -11,7 +11,8 @@ public class VideoPlayerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_media_player);
-		String mountLocation = "/mnt/usb_storage/KhanAcademyVideos/"+getIntent().getStringExtra("videoFileName");
+		//String mountLocation = "/mnt/usb_storage/KhanAcademyVideos/"+getIntent().getStringExtra("videoFileName");
+		String mountLocation = getIntent().getStringExtra("videoFileName");
 		playVideoFromSDCard(mountLocation);
 		//playVideoFromSDCard("/SuperBeam/abc.mp4");
 	}

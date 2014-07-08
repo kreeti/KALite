@@ -42,9 +42,12 @@ public class MainActivity extends BaseListActivity{
 		    		parseJSON(allChildrens.get(pos));
 			    	setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));
 		    	}else{
-		    		Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
+		    		/*Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
 		    		videoPlayerIntent.putExtra("videoFileName", subject.get(pos));
-		    		MainActivity.this.startActivity(videoPlayerIntent);
+		    		MainActivity.this.startActivity(videoPlayerIntent);*/
+		    		Intent intent = new Intent(MainActivity.this, FileChooserExampleActivity.class);
+		    		intent.putExtra("videoFileName", subject.get(pos));
+		    		MainActivity.this.startActivity(intent);
 		    	}    	
 		    			    	
 		    }

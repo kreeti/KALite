@@ -4,5 +4,7 @@
     <string name="app_name">KALiteAndroid</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="fileChooserButton">Choose file</string>
+    <string name="playVideo">Play</string>
 
 </resources>
