@@ -1,5 +1,4 @@
 package com.example.kaliteandroid;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,15 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -98,7 +94,7 @@ public class BaseListActivity extends ListActivity {
 		}	
 		if(subject.get(0).endsWith(".mp4")){
 		 	Intent videoPlayerIntent = new Intent(this, VideoPlayerActivity.class);	
-    		videoPlayerIntent.putExtra("videoFileName", subject.get(0));
+    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(0));
     		this.startActivity(videoPlayerIntent);
 		}else{
 			setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
