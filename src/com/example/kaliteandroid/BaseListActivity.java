@@ -28,7 +28,7 @@ public class BaseListActivity extends Activity {
     public String topic;    
     public String[] subjectArray;
     public JSONObject jsonObj;
-    List<String> subject;
+    List<VideoModelClass> subject;
     List<JSONObject>allChildrens = new ArrayList<JSONObject>();	
     private static final int REQUEST_CODE = 6384;
     private static final String TAG = "FileChooserExampleActivity";
@@ -61,7 +61,7 @@ public class BaseListActivity extends Activity {
 	
 	public void parseJSON(JSONObject jsonObject)	{
 		try {
-			subject = new ArrayList<String>();
+			subject = new ArrayList<VideoModelClass>();
 			allChildrens = new ArrayList<JSONObject>();
 			if(jsonObject == null){
 				String s = loadJSONFromAsset();				 
@@ -76,45 +76,41 @@ public class BaseListActivity extends Activity {
 				for(int i=0; i<jsonArray.length(); i++) {				
 	                jsonObj = jsonArray.getJSONObject(i);
 	                allChildrens.add(jsonObj);
-	                if(jsonObj.has("title"))
-	                	subject.add(jsonObj.getString("title"));	                
+	                VideoModelClass model = new VideoModelClass();
+	                if(jsonObj.has("title")){
+	                	model.title = jsonObj.getString("title");
+	                	model.isVideoURLExist = false;
+	                }               	
+	                if(jsonObj.has("download_urls")){
+	                	model.isVideoURLExist = true;	                	
+	                	String fileName = jsonObj.getString("id");
+	                	fileName = fileName+".mp4";
+	                	if(fileName != null && !fileName.isEmpty())
+	                		model.videoFileName = fileName;
+	                }
+	                	subject.add(model);	                
 	            }	
-			}else if(jsonObj.has("download_urls")){                	   
-                	String url = jsonObj.getString("id");
-                	url = url+".mp4";
-                	if(url != null && !url.isEmpty())
-                		subject.add(url);               	              		
-			}else
-        		subject.add("File not found");  
+			}  
 					
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		if(subject.get(0).endsWith(".mp4")){
+		if(subject.get(0).videoFileName != null){
+			if(subject.get(0).videoFileName.endsWith(".mp4")){
 		 	/*Intent videoPlayerIntent = new Intent(this, VideoPlayerActivity.class);	
     		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(0));
     		this.startActivity(videoPlayerIntent);*/
-			//File file = new File(fileDirectoryBasePath+"videos/"+subject.get(0));			
-			//setListAdapter(file.exists(), true);
+			File file = new File(fileDirectoryBasePath+"videos/"+subject.get(0).videoFileName);			
+			setListAdapter(file.exists());
+			}
 		}else{
 			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
-			setListAdapter(true, false);
+			setListAdapter(true);
 		}
 		
-	}
-	
-	 public void replaceString(Object object){
-		 List<String> subjectsList = new ArrayList<String>();
-		 for(int i=0; i<subject.size(); i++) {				
-             String string = subject.get(i);
-             string = string.replace((CharSequence) object, "");
-             string = string.replaceAll("/","");
-             subjectsList.add(string);                            
-         }	
-		 subject = subjectsList;
-	 }
+	}	 
 	 
 	 public void showChooser(String titleString) {
 	        // Use the GET_CONTENT intent from the utility class
@@ -190,10 +186,9 @@ public class BaseListActivity extends Activity {
 		    }
 	        }
 	    
-	    private void setListAdapter(boolean isFileExist, boolean isVideo) {		    	
+	    private void setListAdapter(boolean isFileExist) {		    	
 	    	KALiteArrayAdapter adapter = new KALiteArrayAdapter(this, subject);
-	    	adapter.isExist = isFileExist;
-	    	adapter.isVideo = isVideo;
+	    	adapter.isVideoFileExist = isFileExist;	    	
 	    	ListView myList = (ListView)findViewById(R.id.list);
 	    	myList.setAdapter(adapter);	
 	    }

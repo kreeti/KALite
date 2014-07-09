@@ -12,12 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class KALiteArrayAdapter extends ArrayAdapter<String> {
+public class KALiteArrayAdapter extends ArrayAdapter<VideoModelClass> {
 	
-	private static List<String> items;	
-	public boolean isExist;
-	public boolean isVideo;
-	public KALiteArrayAdapter(Context context, List<String> subject) {
+	private static List<VideoModelClass> items;		
+	public boolean isVideoFileExist;
+	public KALiteArrayAdapter(Context context, List<VideoModelClass> subject) {
 		 super(context, R.layout.list_cell);
 		 items = subject;
 		// TODO Auto-generated constructor stub
@@ -36,17 +35,17 @@ public class KALiteArrayAdapter extends ArrayAdapter<String> {
             v = li.inflate(R.layout.list_cell, null);           
         }
          
-       String details = items.get(position);         
+       VideoModelClass details = items.get(position);         
         if(details != null) {            
             TextView textView = (TextView)v.findViewById(R.id.textView);
-            if(!isExist)textView.setTextColor(Color.GRAY);
+            if(!isVideoFileExist)textView.setTextColor(Color.GRAY);
             if(textView != null) 
-            	textView.setText(details);
+            	textView.setText(details.title);
             ImageView imageView = (ImageView)v.findViewById(R.id.imageView);
-            if(!isVideo){
-            	imageView.setImageResource(drawable.ic_action_next);
+            if(!details.isVideoURLExist && details.videoFileName == null){
+            	imageView.setImageResource(drawable.ic_action_next);            	        	
             }else{
-            	imageView.setImageResource(drawable.ic_launcher);
+            	imageView.setImageResource(drawable.ic_launcher);    
             }
             
             
