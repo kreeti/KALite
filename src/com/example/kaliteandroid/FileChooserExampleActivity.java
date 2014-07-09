@@ -62,5 +62,11 @@ public class FileChooserExampleActivity extends BaseListActivity {
         });
         
     }
+    
+    @Override 
+    public void onBackPressed()    { 		
+		super.onBackPressed();
+		 
+     } 
    
 }

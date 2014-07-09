@@ -95,7 +95,14 @@ public class BaseListActivity extends ListActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
+		if(subject.get(0).endsWith(".mp4")){
+		 	Intent videoPlayerIntent = new Intent(this, VideoPlayerActivity.class);	
+    		videoPlayerIntent.putExtra("videoFileName", subject.get(0));
+    		this.startActivity(videoPlayerIntent);
+		}else{
+			setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
+		}
+		
 	}
 	
 	 public void replaceString(Object object){
@@ -148,9 +155,7 @@ public class BaseListActivity extends ListActivity {
 	                    }
 	                }
 	                break;
-	        }
-	        String fileName = selectedFile.getName();
-	        String subString = fileName.substring(fileName.length() - 5, fileName.length());
+	        }	       
 	        if(selectedFile.getName().endsWith(".json")){
 	        	JSONParser parser = new JSONParser(); 
 				Object obj = null;

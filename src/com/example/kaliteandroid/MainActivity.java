@@ -1,13 +1,7 @@
 package com.example.kaliteandroid;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
@@ -25,12 +19,8 @@ public class MainActivity extends BaseListActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		context = this;
-		setContentView(R.layout.activity_main);			
-		//parseJSON(null);			
-    	//lastDisplayedJsonObj.add(allChildrens.get(0));
-    	showChooser("Choose a JSON file");
-		//after parsing the JSON file we need to store all the subjects into subjectsArray and show it in listView
-		//setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	
+		setContentView(R.layout.activity_main);		
+    	showChooser("Choose a JSON file");			
 		ListView listView = getListView();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
@@ -39,11 +29,14 @@ public class MainActivity extends BaseListActivity{
 		    		lastDisplayedPosition++;
 		    		lastDisplayedJsonObj.add(allChildrens.get(pos));		    		
 		    		parseJSON(allChildrens.get(pos));
-			    	setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));
-		    	}else{
-		    		/*Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
-		    		videoPlayerIntent.putExtra("videoFileName", subject.get(pos));
-		    		MainActivity.this.startActivity(videoPlayerIntent);*/
+		    		/* if(subject.get(pos).endsWith(".mp4")){
+		    			 	Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
+				    		videoPlayerIntent.putExtra("videoFileName", subject.get(pos));
+				    		MainActivity.this.startActivity(videoPlayerIntent);
+		    		 }else{
+		    			 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));
+		    		 }		*/	    	
+		    	}else{		    		
 		    		Intent intent = new Intent(MainActivity.this, FileChooserExampleActivity.class);
 		    		intent.putExtra("videoFileName", subject.get(pos));
 		    		MainActivity.this.startActivity(intent);
@@ -66,9 +59,17 @@ public class MainActivity extends BaseListActivity{
 		}else{
 			parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
 		}		 		 
-		 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	 
+		// setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	 
 		 
      } 
+	 
+	 @Override
+	 public void onResume(){
+	     super.onResume();
+	     if(lastDisplayedJsonObj.size() > 0)
+	    	 parseJSON(lastDisplayedJsonObj.get(0));
+
+	 }
 
 	
 }

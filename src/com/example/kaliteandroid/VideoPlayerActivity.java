@@ -25,4 +25,10 @@ public class VideoPlayerActivity extends Activity {
 		videoView.setMediaController(new MediaController(this));
 		videoView.start();
 	}
+	
+	@Override 
+    public void onBackPressed()    { 		
+		super.onBackPressed();
+		 
+     } 
 }
