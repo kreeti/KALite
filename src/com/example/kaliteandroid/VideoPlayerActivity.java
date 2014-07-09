@@ -1,9 +1,7 @@
 package com.example.kaliteandroid;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.widget.MediaController;
 import android.widget.VideoView;
 

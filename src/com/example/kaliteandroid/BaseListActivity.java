@@ -12,16 +12,16 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
-public class BaseListActivity extends ListActivity {
+public class BaseListActivity extends Activity {
 	public JSONArray jsonArray;
 	public JSONObject baseJobj;
     public JSONObject jobj;
@@ -93,11 +93,14 @@ public class BaseListActivity extends ListActivity {
 			e.printStackTrace();
 		}	
 		if(subject.get(0).endsWith(".mp4")){
-		 	Intent videoPlayerIntent = new Intent(this, VideoPlayerActivity.class);	
+		 	/*Intent videoPlayerIntent = new Intent(this, VideoPlayerActivity.class);	
     		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(0));
-    		this.startActivity(videoPlayerIntent);
+    		this.startActivity(videoPlayerIntent);*/
+			//File file = new File(fileDirectoryBasePath+"videos/"+subject.get(0));			
+			//setListAdapter(file.exists(), true);
 		}else{
-			setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
+			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
+			setListAdapter(true, false);
 		}
 		
 	}
@@ -186,5 +189,15 @@ public class BaseListActivity extends ListActivity {
 		        super.onActivityResult(requestCode, resultCode, data);
 		    }
 	        }
+	    
+	    private void setListAdapter(boolean isFileExist, boolean isVideo) {		    	
+	    	KALiteArrayAdapter adapter = new KALiteArrayAdapter(this, subject);
+	    	adapter.isExist = isFileExist;
+	    	adapter.isVideo = isVideo;
+	    	ListView myList = (ListView)findViewById(R.id.list);
+	    	myList.setAdapter(adapter);	
+	    }
+	    
+	    
 	    	
 }

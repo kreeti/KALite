@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends BaseListActivity{	
@@ -23,7 +22,7 @@ public class MainActivity extends BaseListActivity{
 		context = this;
 		setContentView(R.layout.activity_main);		
     	showChooser("Choose a JSON file");			
-		ListView listView = getListView();
+    	ListView listView = (ListView)findViewById(R.id.list);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
@@ -39,9 +38,9 @@ public class MainActivity extends BaseListActivity{
 		    			 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));
 		    		 }		*/	    	
 		    	}else{		    		
-		    		Intent intent = new Intent(MainActivity.this, FileChooserExampleActivity.class);
+		    		/*Intent intent = new Intent(MainActivity.this, FileChooserExampleActivity.class);
 		    		intent.putExtra("videoFileName", subject.get(pos));
-		    		MainActivity.this.startActivity(intent);
+		    		MainActivity.this.startActivity(intent);*/
 		    	}    	
 		    			    	
 		    }

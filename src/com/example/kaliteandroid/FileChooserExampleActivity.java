@@ -15,21 +15,11 @@
  */
 
 package com.example.kaliteandroid;
-
-import java.io.File;
-
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.ipaulpro.afilechooser.utils.FileUtils;
 
 /**
  * @author paulburke (ipaulpro)
@@ -38,8 +28,7 @@ public class FileChooserExampleActivity extends BaseListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.file_chooser_layout);
-        getListView().setVisibility(View.INVISIBLE);        
+        setContentView(R.layout.file_chooser_layout);                
         // Create a simple button to start the file chooser process
         Button fileChooserButton = (Button) findViewById(R.id.chooserButton);
         fileChooserButton.setText("Choose a file");
