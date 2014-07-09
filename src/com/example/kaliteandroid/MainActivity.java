@@ -1,16 +1,15 @@
 package com.example.kaliteandroid;
-
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
-import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,14 +23,14 @@ public class MainActivity extends BaseListActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 		context = this;
 		setContentView(R.layout.activity_main);			
-		parseJSON(null);			
-    	lastDisplayedJsonObj.add(allChildrens.get(0));
-		
+		//parseJSON(null);			
+    	//lastDisplayedJsonObj.add(allChildrens.get(0));
+    	showChooser("Choose a JSON file");
 		//after parsing the JSON file we need to store all the subjects into subjectsArray and show it in listView
-		setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	
+		//setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));	
 		ListView listView = getListView();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
@@ -53,7 +52,8 @@ public class MainActivity extends BaseListActivity{
 		    }
 		});		
 		
-	}	
+	}
+	
 	
 	 @Override 
      public void onBackPressed()    { 		

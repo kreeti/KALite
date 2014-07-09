@@ -34,19 +34,12 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 /**
  * @author paulburke (ipaulpro)
  */
-public class FileChooserExampleActivity extends Activity {
-
-    private static final String TAG = "FileChooserExampleActivity";
-    public String fileDirectoryPath;
-
-    private static final int REQUEST_CODE = 6384; // onActivityResult request
-                                                  // code
-
+public class FileChooserExampleActivity extends BaseListActivity {      
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.file_chooser_layout);
-
+        getListView().setVisibility(View.INVISIBLE);        
         // Create a simple button to start the file chooser process
         Button fileChooserButton = (Button) findViewById(R.id.chooserButton);
         fileChooserButton.setText("Choose a file");
@@ -54,7 +47,7 @@ public class FileChooserExampleActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Display the file chooser dialog
-                showChooser();
+                showChooser("Choose a video file");
             }
         });
         
@@ -67,50 +60,7 @@ public class FileChooserExampleActivity extends Activity {
             		FileChooserExampleActivity.this.startActivity(videoPlayerIntent);            	
             }
         });
-
         
     }
-
-    private void showChooser() {
-        // Use the GET_CONTENT intent from the utility class
-        Intent target = FileUtils.createGetContentIntent();
-        // Create the chooser Intent
-        Intent intent = Intent.createChooser(
-                target, "Choose a file");
-        try {
-            startActivityForResult(intent, REQUEST_CODE);
-        } catch (ActivityNotFoundException e) {
-            // The reason for the existence of aFileChooser
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE:
-                // If the file selection was successful
-                if (resultCode == RESULT_OK) {
-                    if (data != null) {
-                        // Get the URI of the selected file
-                        final Uri uri = data.getData();
-                        Log.i(TAG, "Uri = " + uri.toString());
-                        try {
-                            // Get the file path from the URI
-                            final String path = FileUtils.getPath(this, uri);
-                            Toast.makeText(FileChooserExampleActivity.this,
-                                    "File Selected: " + path, Toast.LENGTH_LONG).show();
-                            if (path != null && FileUtils.isLocal(path)) {
-                                File file = new File(path);
-                                String s = file.getName();
-                                fileDirectoryPath = path.replace(file.getName(), "");
-                            }
-                        } catch (Exception e) {
-                            Log.e("FileSelectorTestActivity", "File select error", e);
-                        }
-                    }
-                }
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+   
 }
