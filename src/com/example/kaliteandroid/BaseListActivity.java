@@ -36,7 +36,8 @@ public class BaseListActivity extends ListActivity {
     List<JSONObject>allChildrens = new ArrayList<JSONObject>();	
     private static final int REQUEST_CODE = 6384;
     private static final String TAG = "FileChooserExampleActivity";
-    public String fileDirectoryPath;
+    public String fileDirectoryBasePath;
+    public String fileDirectoryVideoPath;
     public File selectedFile;
     public boolean isFileChooserOn;
 	@Override
@@ -146,8 +147,10 @@ public class BaseListActivity extends ListActivity {
 	                            Toast.makeText(this,
 	                                    "File Selected: " + path, Toast.LENGTH_LONG).show();
 	                            if (path != null && FileUtils.isLocal(path)) {
-	                                selectedFile = new File(path);	                                
-	                                fileDirectoryPath = path.replace(selectedFile.getName(), "");
+	                                selectedFile = new File(path);  
+	                                fileDirectoryBasePath = path.replace(selectedFile.getName(), "");	                                
+	                                fileDirectoryVideoPath = path;
+	                                	
 	                            }
 	                        } catch (Exception e) {
 	                            Log.e("FileSelectorTestActivity", "File select error", e);

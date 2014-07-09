@@ -56,7 +56,7 @@ public class FileChooserExampleActivity extends BaseListActivity {
             @Override
             public void onClick(View v) {            	
             		Intent videoPlayerIntent = new Intent(FileChooserExampleActivity.this, VideoPlayerActivity.class);            	
-            		videoPlayerIntent.putExtra("videoFileName", fileDirectoryPath+getIntent().getStringExtra("videoFileName"));
+            		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath);
             		FileChooserExampleActivity.this.startActivity(videoPlayerIntent);            	
             }
         });
