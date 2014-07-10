@@ -34,11 +34,12 @@ public class MainActivity extends BaseListActivity{
 		    		JSONObject j = allChildrens.get(pos);
 		    		if(j.has("children"))
 		    			parseJSON(allChildrens.get(pos));
-		    		else{
-		    			Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
-			    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
-			    		MainActivity.this.startActivity(videoPlayerIntent);
-		    		} 	
+		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty()){
+		    				Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
+				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
+				    		MainActivity.this.startActivity(videoPlayerIntent);
+		    			}	    			
+		    		 	
 		    	}	
 		    			    	
 		    }

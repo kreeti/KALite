@@ -191,8 +191,7 @@ public class BaseListActivity extends Activity {
 	    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
 	    	ListView myList = (ListView)findViewById(R.id.list);
 	    	myList.setAdapter(adapter);	
-	    }
-	    
+	    }   
 	    
 	    	
 }
