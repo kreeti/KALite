@@ -98,14 +98,12 @@ public class BaseListActivity extends Activity {
 			e.printStackTrace();
 		}	
 		if(subject.get(0).videoFileName != null){
-			if(subject.get(0).videoFileName.endsWith(".mp4")){
-		 	/*Intent videoPlayerIntent = new Intent(this, VideoPlayerActivity.class);	
-    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(0));
-    		this.startActivity(videoPlayerIntent);*/
+			if(subject.get(0).videoFileName.endsWith(".mp4")){		 	
 			File file = new File(fileDirectoryBasePath+"videos/"+subject.get(0).videoFileName);			
 			setListAdapter(file.exists());
 			}
-		}else{
+		}
+		else{
 			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
 			setListAdapter(true);
 		}

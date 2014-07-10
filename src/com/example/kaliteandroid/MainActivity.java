@@ -28,8 +28,17 @@ public class MainActivity extends BaseListActivity{
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
 		    	if(allChildrens.size() > 0){	
 		    		lastDisplayedPosition++;
-		    		lastDisplayedJsonObj.add(allChildrens.get(pos));		    		
-		    		parseJSON(allChildrens.get(pos));
+		    		lastDisplayedJsonObj.add(allChildrens.get(pos));
+		    		JSONObject j = allChildrens.get(pos);
+		    		if(j.has("children"))
+		    			parseJSON(allChildrens.get(pos));
+		    		else{
+		    			Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
+			    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
+			    		MainActivity.this.startActivity(videoPlayerIntent);
+		    		}
+		    		
+		    				    		
 		    		/* if(subject.get(pos).endsWith(".mp4")){
 		    			 	Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", subject.get(pos));
@@ -38,6 +47,11 @@ public class MainActivity extends BaseListActivity{
 		    			 setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, subject));
 		    		 }		*/	    	
 		    	}else{		    		
+		    		
+						Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
+			    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(0).videoFileName);
+			    		MainActivity.this.startActivity(videoPlayerIntent);
+					
 		    		/*Intent intent = new Intent(MainActivity.this, FileChooserExampleActivity.class);
 		    		intent.putExtra("videoFileName", subject.get(pos));
 		    		MainActivity.this.startActivity(intent);*/
