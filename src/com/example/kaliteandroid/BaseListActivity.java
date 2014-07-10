@@ -78,8 +78,7 @@ public class BaseListActivity extends Activity {
 	                allChildrens.add(jsonObj);
 	                VideoModelClass model = new VideoModelClass();
 	                if(jsonObj.has("title")){
-	                	model.title = jsonObj.getString("title");
-	                	model.isVideoURLExist = false;
+	                	model.title = jsonObj.getString("title");	                	
 	                	model.isChildExist = jsonObj.has("children");
 	                }               	
 	                if(jsonObj.has("download_urls")){

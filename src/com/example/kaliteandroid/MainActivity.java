@@ -48,9 +48,9 @@ public class MainActivity extends BaseListActivity{
 		    		 }		*/	    	
 		    	}else{		    		
 		    		
-						Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
+						/*Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
 			    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(0).videoFileName);
-			    		MainActivity.this.startActivity(videoPlayerIntent);
+			    		MainActivity.this.startActivity(videoPlayerIntent);*/
 					
 		    		/*Intent intent = new Intent(MainActivity.this, FileChooserExampleActivity.class);
 		    		intent.putExtra("videoFileName", subject.get(pos));

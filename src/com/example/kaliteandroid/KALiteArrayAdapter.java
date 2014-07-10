@@ -39,31 +39,23 @@ public class KALiteArrayAdapter extends ArrayAdapter<VideoModelClass> {
        VideoModelClass details = items.get(position);         
         if(details != null) {            
             TextView textView = (TextView)v.findViewById(R.id.textView);
-            File file = new File(fileDirectoryBasePath+"videos/"+details.videoFileName);
-            
-            
             if(textView != null) 
             	textView.setText(details.title);
             ImageView imageView = (ImageView)v.findViewById(R.id.imageView);
             if(details.isChildExist){
             	imageView.setImageResource(drawable.ic_action_next);            	        	
             }else{
-            	imageView.setImageResource(drawable.ic_launcher);   
-            	if(details.videoFileName != null && !details.videoFileName.isEmpty()){        			
-        			if(!file.exists())
-        				textView.setTextColor(Color.GRAY);
-        			
+            	imageView.setImageResource(drawable.ic_launcher); 
+            	File file = new File(fileDirectoryBasePath+"videos/"+details.videoFileName);
+            	if(details.isVideoURLExist && !file.exists()){
+            		textView.setTextColor(Color.GRAY);        			
+                }else if(details.isVideoURLExist && file.exists()){
+                	textView.setTextColor(Color.BLACK);
                 }else{
                 	textView.setTextColor(Color.LTGRAY);
                 }
             	
             }
-            /*if(!details.isVideoURLExist && details.videoFileName == null){
-            	imageView.setImageResource(drawable.ic_action_next);            	        	
-            }else{
-            	imageView.setImageResource(drawable.ic_launcher);    
-            }*/
-            
             
         }
          
