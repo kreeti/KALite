@@ -6,13 +6,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import com.ipaulpro.afilechooser.utils.FileUtils;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,6 +40,7 @@ public class BaseListActivity extends Activity {
     public String fileDirectoryVideoPath;
     public File selectedFile;
     public boolean isFileChooserOn;
+    public ProgressDialog dialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -99,17 +104,7 @@ public class BaseListActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		setListAdapter();
-		/*if(subject.get(0).videoFileName != null){
-			if(subject.get(0).videoFileName.endsWith(".mp4")){		 	
-			File file = new File(fileDirectoryBasePath+"videos/"+subject.get(0).videoFileName);			
-			setListAdapter(file.exists());
-			}
-		}
-		else{
-			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subject));
-			setListAdapter(true);
-		}*/
+		setListAdapter();		
 		
 	}	 
 	 
@@ -183,6 +178,10 @@ public class BaseListActivity extends Activity {
 		    
 				
 		        isFileChooserOn = false;
+		        if(dialog != null) {
+		   		 dialog.dismiss();
+		   		 dialog = null;
+		   	}
 		        super.onActivityResult(requestCode, resultCode, data);
 		    }
 	        }
