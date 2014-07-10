@@ -1,58 +1,73 @@
 package com.example.kaliteandroid;
 
-import org.json.JSONException;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONObject;
-
-import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ChildActivity extends ListActivity{
+public class ChildActivity extends BaseListActivity{	
+	ChildActivity context;
+	int lastDisplayedPosition = 0;
+	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
 	
-    MainActivity m = new MainActivity();
-	String sub = m.topic;			
-	public String[] topics = null;
-	public String subtopic1;
-	int c = 0;	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_child);	
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		this.getActionBar().setDisplayShowHomeEnabled(false);
-		/*try {
-			jsonObj = new JSONObject(getIntent().getStringExtra("jsonObject"));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		parseJSON(jsonObj);		
-		
-		//after parsing the JSON file we need to store all the subjects into subjectsArray and show it in listView
-		setListAdapter(new ArrayAdapter<String>(ChildActivity.this, android.R.layout.simple_list_item_1, subject));	
-		ListView listView = getListView();
+		context = this;
+		setContentView(R.layout.activity_child);		
+    	showChooser("Choose a JSON file");	
+    	dialog = ProgressDialog.show(this, "", "Loading...");
+    	ListView listView = (ListView)findViewById(R.id.list);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
-		    	//parseJSON(allChildrens.get(pos));		    	
-		    	//setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, ChildListActivity));	
-		    	Intent childIntent = new Intent(ChildActivity.this, MainActivity.class);	
-				childIntent.putExtra("jsonObject", allChildrens.get(pos).toString());
-				ChildActivity.this.startActivity(childIntent);
+		    	if(allChildrens.size() > 0){	
+		    		lastDisplayedPosition++;
+		    		lastDisplayedJsonObj.add(allChildrens.get(pos));
+		    		JSONObject j = allChildrens.get(pos);
+		    		if(j.has("children"))
+		    			parseJSON(allChildrens.get(pos));
+		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty()){
+		    				Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
+				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
+				    		ChildActivity.this.startActivity(videoPlayerIntent);
+		    			}	    			
+		    		 	
+		    	}	
+		    			    	
 		    }
-		});*/
+		});		
+		
 	}
 	
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		
-	}	
 	
+	 @Override 
+     public void onBackPressed()    { 		
+		lastDisplayedPosition--;	 	
+		if(lastDisplayedPosition < 0){			 
+			lastDisplayedPosition = 0;		 	
+		 }
+		if(lastDisplayedPosition == 0){
+			parseJSON(baseJobj);
+		}else{
+			parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
+		}			 
+		 
+     } 
+	 
+	 /*@Override
+	 public void onResume(){
+	     super.onResume();
+	     if(lastDisplayedJsonObj.size() > 0)
+	    	 parseJSON(lastDisplayedJsonObj.get(0));
+
+	 }*/
+
 	
 }

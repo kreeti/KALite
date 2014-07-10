@@ -6,15 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -191,7 +188,7 @@ public class BaseListActivity extends Activity {
 	    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
 	    	ListView myList = (ListView)findViewById(R.id.list);
 	    	myList.setAdapter(adapter);	
-	    }   
+	    } 
 	    
 	    	
 }

@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import android.os.Bundle;
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class MainActivity extends BaseListActivity{	
+public class MainActivity extends Activity{	
 	MainActivity context;
 	int lastDisplayedPosition = 0;
 	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
@@ -21,54 +22,23 @@ public class MainActivity extends BaseListActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		context = this;
-		setContentView(R.layout.activity_main);		
-    	showChooser("Choose a JSON file");	
-    	dialog = ProgressDialog.show(this, "", "Loading...");
-    	ListView listView = (ListView)findViewById(R.id.list);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		    @Override
-		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
-		    	if(allChildrens.size() > 0){	
-		    		lastDisplayedPosition++;
-		    		lastDisplayedJsonObj.add(allChildrens.get(pos));
-		    		JSONObject j = allChildrens.get(pos);
-		    		if(j.has("children"))
-		    			parseJSON(allChildrens.get(pos));
-		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty()){
-		    				Intent videoPlayerIntent = new Intent(MainActivity.this, VideoPlayerActivity.class);	
-				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
-				    		MainActivity.this.startActivity(videoPlayerIntent);
-		    			}	    			
-		    		 	
-		    	}	
-		    			    	
-		    }
-		});		
+		setContentView(R.layout.activity_main);
+		TextView textView = (TextView)findViewById(R.id.kreetiFoundationTextView);
+		RelativeLayout mainRelativeLayout = (RelativeLayout)findViewById(R.id.kreetiFoundationLayout);
+		mainRelativeLayout.setBackgroundColor(Color.BLACK);
+		textView.setTextColor(Color.WHITE);
+		
+		Handler mHandler = new Handler(); 
+		mHandler.postDelayed(new Runnable() { 
+	        public void run() { 
+	        	Intent childIntent = new Intent(MainActivity.this, ChildActivity.class);		
+	    		MainActivity.this.startActivity(childIntent);
+	        } 
+	    },2000);
+		
 		
 	}
 	
 	
-	 @Override 
-     public void onBackPressed()    { 		
-		lastDisplayedPosition--;	 	
-		if(lastDisplayedPosition < 0){			 
-			lastDisplayedPosition = 0;		 	
-		 }
-		if(lastDisplayedPosition == 0){
-			parseJSON(baseJobj);
-		}else{
-			parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
-		}			 
-		 
-     } 
-	 
-	 /*@Override
-	 public void onResume(){
-	     super.onResume();
-	     if(lastDisplayedJsonObj.size() > 0)
-	    	 parseJSON(lastDisplayedJsonObj.get(0));
-
-	 }*/
-
 	
 }
