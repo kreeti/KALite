@@ -45,14 +45,16 @@ public class KALiteArrayAdapter extends ArrayAdapter<VideoModelClass> {
             if(details.isChildExist){
             	imageView.setImageResource(drawable.ic_action_next);            	        	
             }else{
-            	imageView.setImageResource(drawable.icon_play); 
+            	imageView.setImageResource(drawable.video_icon_active); 
             	File file = new File(fileDirectoryBasePath+"videos/"+details.videoFileName);
             	if(details.isVideoURLExist && !file.exists()){
-            		textView.setTextColor(Color.GRAY);        			
+            		textView.setTextColor(Color.GRAY); 
+            		imageView.setImageResource(drawable.video_icon_inactive);
                 }else if(details.isVideoURLExist && file.exists()){
                 	textView.setTextColor(Color.BLACK);
                 }else{
                 	textView.setTextColor(Color.LTGRAY);
+                	imageView.setImageResource(drawable.video_icon_inactive);
                 }
             	
             }
