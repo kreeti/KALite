@@ -11,16 +11,16 @@
         android:layout_x="6dp"
         android:layout_y="8sp"
         android:gravity="center|center_horizontal|left|right"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:paddingLeft = "10sp" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" 
         android:paddingRight = "10sp"/>

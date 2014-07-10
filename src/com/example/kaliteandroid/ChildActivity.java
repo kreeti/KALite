@@ -1,8 +1,11 @@
 package com.example.kaliteandroid;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONObject;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,11 +36,14 @@ public class ChildActivity extends BaseListActivity{
 		    		JSONObject j = allChildrens.get(pos);
 		    		if(j.has("children"))
 		    			parseJSON(allChildrens.get(pos));
-		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty()){
-		    				Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
+		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty())	{		    			
+		    			File file = new File(fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
+		            	if(file.exists()){
+		            		Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
 				    		ChildActivity.this.startActivity(videoPlayerIntent);
-		    			}	    			
+		            	}		    				
+		    		}	    			
 		    		 	
 		    	}	
 		    			    	
