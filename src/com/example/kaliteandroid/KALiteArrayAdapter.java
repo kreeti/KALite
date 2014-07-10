@@ -1,4 +1,5 @@
 package com.example.kaliteandroid;
+import java.io.File;
 import java.util.List;
 
 import com.example.kaliteandroid.R.drawable;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 public class KALiteArrayAdapter extends ArrayAdapter<VideoModelClass> {
 	
 	private static List<VideoModelClass> items;		
-	public boolean isVideoFileExist;
+	public String fileDirectoryBasePath;
 	public KALiteArrayAdapter(Context context, List<VideoModelClass> subject) {
 		 super(context, R.layout.list_cell);
 		 items = subject;
@@ -38,15 +39,30 @@ public class KALiteArrayAdapter extends ArrayAdapter<VideoModelClass> {
        VideoModelClass details = items.get(position);         
         if(details != null) {            
             TextView textView = (TextView)v.findViewById(R.id.textView);
-            if(!isVideoFileExist)textView.setTextColor(Color.GRAY);
+            File file = new File(fileDirectoryBasePath+"videos/"+details.videoFileName);
+            
+            
             if(textView != null) 
             	textView.setText(details.title);
             ImageView imageView = (ImageView)v.findViewById(R.id.imageView);
-            if(!details.isVideoURLExist && details.videoFileName == null){
+            if(details.isChildExist){
+            	imageView.setImageResource(drawable.ic_action_next);            	        	
+            }else{
+            	imageView.setImageResource(drawable.ic_launcher);   
+            	if(details.videoFileName != null && !details.videoFileName.isEmpty()){        			
+        			if(!file.exists())
+        				textView.setTextColor(Color.GRAY);
+        			
+                }else{
+                	textView.setTextColor(Color.LTGRAY);
+                }
+            	
+            }
+            /*if(!details.isVideoURLExist && details.videoFileName == null){
             	imageView.setImageResource(drawable.ic_action_next);            	        	
             }else{
             	imageView.setImageResource(drawable.ic_launcher);    
-            }
+            }*/
             
             
         }

@@ -11,7 +11,7 @@
         android:layout_x="6dp"
         android:layout_y="8sp"
         android:gravity="center|center_horizontal|left|right"
-        android:textSize="15sp" />
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/imageView"
