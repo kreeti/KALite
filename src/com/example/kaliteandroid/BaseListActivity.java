@@ -180,6 +180,8 @@ public class BaseListActivity extends Activity {
 		   		 dialog = null;
 		   	}
 		        super.onActivityResult(requestCode, resultCode, data);
+		    }else{
+		    	showChooser("Choose a JSON file");
 		    }
 	        }
 	    
@@ -188,7 +190,6 @@ public class BaseListActivity extends Activity {
 	    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
 	    	ListView myList = (ListView)findViewById(R.id.list);
 	    	myList.setAdapter(adapter);	
-	    } 
-	    
+	    }     
 	    	
 }
