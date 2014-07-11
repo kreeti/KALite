@@ -58,13 +58,14 @@ public class ChildActivity extends BaseActivity{
      public void onBackPressed()    { 		
 		lastDisplayedPosition--;	 	
 		if(lastDisplayedPosition < 0){			 
-			lastDisplayedPosition = 0;		 	
-		 }
-		if(lastDisplayedPosition == 0){
-			parseJSON(baseJobj);
-		}else{
-			parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
-		}			 
+			super.onBackPressed();		 	
+		 }else{
+			 if(lastDisplayedPosition == 0){
+					parseJSON(baseJobj);
+				}else{
+					parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
+				}
+		 }			 
 		 
      } 
 	

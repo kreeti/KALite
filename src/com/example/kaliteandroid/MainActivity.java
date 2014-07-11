@@ -37,6 +37,7 @@ public class MainActivity extends Activity{
 	        public void run() { 
 	        	Intent childIntent = new Intent(MainActivity.this, ChildActivity.class);		
 	    		MainActivity.this.startActivity(childIntent);
+	    		finish();
 	        } 
 	    },2000);
 		
