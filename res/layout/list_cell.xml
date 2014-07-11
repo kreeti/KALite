@@ -14,7 +14,8 @@
         android:textSize="15sp"
         android:paddingTop="14dip"
         android:paddingBottom="14dip"
-        android:paddingLeft = "10sp" />
+        android:paddingLeft = "10sp"
+        android:paddingRight = "60sp" />
 
     <ImageView
         android:id="@+id/imageView"

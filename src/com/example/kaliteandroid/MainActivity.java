@@ -1,3 +1,8 @@
+/*
+ *	Created by Nabarun Banerjee on 11/07/14.
+ *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
+ */
+
 package com.example.kaliteandroid;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +23,7 @@ public class MainActivity extends Activity{
 	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		context = this;
 		setContentView(R.layout.activity_main);

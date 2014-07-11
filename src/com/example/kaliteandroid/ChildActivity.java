@@ -1,3 +1,7 @@
+/*
+ *	Created by Nabarun Banerjee on 11/07/14.
+ *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
+ */
 package com.example.kaliteandroid;
 import java.io.File;
 import java.util.ArrayList;
@@ -10,7 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class ChildActivity extends BaseListActivity{	
+public class ChildActivity extends BaseActivity{	
 	ChildActivity context;
 	int lastDisplayedPosition = 0;
 	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
@@ -63,15 +67,7 @@ public class ChildActivity extends BaseListActivity{
 		}			 
 		 
      } 
-	 
-	 /*@Override
-	 public void onResume(){
-	     super.onResume();
-	     if(lastDisplayedJsonObj.size() > 0)
-	    	 parseJSON(lastDisplayedJsonObj.get(0));
-
-	 }*/
-
+	
 	 @Override 
 		protected void onSaveInstanceState(Bundle icicle) {	      
 		      super.onSaveInstanceState(icicle);
