@@ -39,6 +39,9 @@ public class MainActivity extends Activity{
 		
 	}
 	
-	
+	@Override 
+	protected void onSaveInstanceState(Bundle icicle) {	      
+	      super.onSaveInstanceState(icicle);
+	    }	
 	
 }

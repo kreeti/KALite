@@ -29,4 +29,9 @@ public class VideoPlayerActivity extends Activity {
 		super.onBackPressed();
 		 
      } 
+	
+	@Override 
+	protected void onSaveInstanceState(Bundle icicle) {	      
+	      super.onSaveInstanceState(icicle);
+	    }
 }

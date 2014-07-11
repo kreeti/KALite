@@ -1,11 +1,8 @@
 package com.example.kaliteandroid;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONObject;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -75,5 +72,9 @@ public class ChildActivity extends BaseListActivity{
 
 	 }*/
 
+	 @Override 
+		protected void onSaveInstanceState(Bundle icicle) {	      
+		      super.onSaveInstanceState(icicle);
+		    }
 	
 }
