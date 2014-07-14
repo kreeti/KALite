@@ -6,10 +6,8 @@
 package com.kreeti.kfandroid;
 import java.io.File;
 import java.util.List;
-
 import com.example.kaliteandroid.R;
 import com.example.kaliteandroid.R.drawable;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
