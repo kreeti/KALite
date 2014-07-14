@@ -35,15 +35,16 @@ public class ChildActivity extends BaseActivity{
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
-		    	if(allChildrens.size() > 0){	
+		    	if(allChildrens.size() > 0) {	
 		    		lastDisplayedPosition++;
 		    		lastDisplayedJsonObj.add(allChildrens.get(pos));
 		    		JSONObject j = allChildrens.get(pos);
+		    		
 		    		if(j.has("children"))
 		    			parseJSON(allChildrens.get(pos));
-		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty())	{		    			
+		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty()) {		    			
 		    			File file = new File(fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
-		            	if(file.exists()){
+		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
 				    		ChildActivity.this.startActivity(videoPlayerIntent);
@@ -59,14 +60,14 @@ public class ChildActivity extends BaseActivity{
 	
 	
 	 @Override 
-     public void onBackPressed()    { 		
+     public void onBackPressed() { 		
 		lastDisplayedPosition--;	 	
-		if(lastDisplayedPosition < 0){			 
+		if(lastDisplayedPosition < 0) {			 
 			super.onBackPressed();		 	
-		 }else{
-			 if(lastDisplayedPosition == 0){
+		 } else {
+			 if(lastDisplayedPosition == 0) {
 					parseJSON(baseJobj);
-				}else{
+				} else {
 					parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
 				}
 		 }			 

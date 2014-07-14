@@ -23,6 +23,7 @@ public class FileChooserActivity extends BaseActivity {
         setContentView(R.layout.file_chooser_layout); 
         Button fileChooserButton = (Button) findViewById(R.id.chooserButton);
         fileChooserButton.setText("Choose a file");
+        
         fileChooserButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {                

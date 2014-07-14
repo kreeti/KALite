@@ -8,19 +8,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import com.example.kaliteandroid.R;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -52,47 +48,29 @@ public class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);			
 		
-	}	
-	public String loadJSONFromAsset() {		
-	    String json = null;
-	    try {
-	        InputStream inputStream = this.getResources().getAssets().open("topics.json");
-	        int size = inputStream.available();
-	        byte[] buffer = new byte[size];
-	        inputStream.read(buffer);
-	        inputStream.close();
-	        json = new String(buffer, "UTF-8");	       
-	    } catch (IOException ex) {
-	        ex.printStackTrace();
-	        return null;
-	    }
-	    return json;
-
 	}
 	
-	public void parseJSON(JSONObject jsonObject)	{
+	public void parseJSON(JSONObject jsonObject) {
 		try {
 			subject = new ArrayList<VideoModelClass>();
 			allChildrens = new ArrayList<JSONObject>();
-			if(jsonObject == null){
-				String s = loadJSONFromAsset();				 
-				jsonObj = new JSONObject(s);
-				baseJobj = jsonObj;
-			}else{
+			if(jsonObject != null) {
 				jsonObj = jsonObject;
-			}			
+			}		
 			//parse the json object..	
-			if(jsonObj.has("children")){
+			if(jsonObj.has("children")) {
 				JSONArray jsonArray = jsonObj.getJSONArray("children");
-				for(int i=0; i<jsonArray.length(); i++) {				
+				for(int i = 0; i < jsonArray.length(); i++) {				
 	                jsonObj = jsonArray.getJSONObject(i);
 	                allChildrens.add(jsonObj);
 	                VideoModelClass model = new VideoModelClass();
-	                if(jsonObj.has("title")){
+	                
+	                if(jsonObj.has("title")) {
 	                	model.title = jsonObj.getString("title");	                	
 	                	model.isChildExist = jsonObj.has("children");
-	                }               	
-	                if(jsonObj.has("download_urls")){
+	                }   
+	                
+	                if(jsonObj.has("download_urls")) {
 	                	model.isVideoURLExist = true;	
 	                	model.isChildExist = jsonObj.has("children");
 	                	String fileName = jsonObj.getString("id");
@@ -150,7 +128,7 @@ public class BaseActivity extends Activity {
 	                }
 	                break;
 	        }	       
-	        if(selectedFile.getName().endsWith(".json")){
+	        if(selectedFile.getName().endsWith(".json")) {
 	        	JSONParser parser = new JSONParser(); 
 				Object obj = null;
 				try {
@@ -178,7 +156,7 @@ public class BaseActivity extends Activity {
 		   		 dialog = null;
 		   	}
 		        super.onActivityResult(requestCode, resultCode, data);
-		    }else{
+		    } else {
 		    	showChooser("Choose a JSON file");
 		    }
 	        }
