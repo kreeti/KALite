@@ -30,8 +30,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ChildActivity extends Activity{	
-	ChildActivity context;
+public class TopicListActivity extends Activity{	
+	TopicListActivity context;
 	int lastDisplayedPosition = 0;
 	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
 	VideoModelNode rootNode;
@@ -73,9 +73,9 @@ public class ChildActivity extends Activity{
 		    			File file = new File(fileDirectoryVideoPath+ j.videoFileName);
 		    			
 		            	if(file.exists()) {
-		            		Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
+		            		Intent videoPlayerIntent = new Intent(TopicListActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName);
-				    		ChildActivity.this.startActivity(videoPlayerIntent);
+				    		TopicListActivity.this.startActivity(videoPlayerIntent);
 		            	}		    				
 		    		}	    			
 		    		 	
@@ -225,7 +225,7 @@ public class ChildActivity extends Activity{
 		   	}
 		 }		    
 		    public void setListAdapter() {		    	
-		    	ChildListArrayAdapter adapter = new ChildListArrayAdapter(this, currentNode.children);
+		    	TopicsListArrayAdapter adapter = new TopicsListArrayAdapter(this, currentNode.children);
 		    	adapter.videoDirectoryPath = fileDirectoryVideoPath;	    		    	
 		    	ListView myList = (ListView)findViewById(R.id.list);
 		    	myList.setAdapter(adapter);	

@@ -17,11 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ChildListArrayAdapter extends ArrayAdapter<VideoModelNode> {	
+public class TopicsListArrayAdapter extends ArrayAdapter<VideoModelNode> {	
 	private static List<VideoModelNode> items;		
 	public String videoDirectoryPath;
 	
-	public ChildListArrayAdapter(Context context, List<VideoModelNode> nodes) {
+	public TopicsListArrayAdapter(Context context, List<VideoModelNode> nodes) {
 		 super(context, R.layout.list_cell);
 		 items = nodes;
 	}

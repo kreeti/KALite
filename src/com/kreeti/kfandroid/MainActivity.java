@@ -38,7 +38,7 @@ public class MainActivity extends Activity{
 		Handler mHandler = new Handler(); 
 		mHandler.postDelayed(new Runnable() { 
 	        public void run() { 
-	        	Intent childIntent = new Intent(MainActivity.this, ChildActivity.class);		
+	        	Intent childIntent = new Intent(MainActivity.this, TopicListActivity.class);		
 	    		MainActivity.this.startActivity(childIntent);
 	    		finish();
 	        } 
