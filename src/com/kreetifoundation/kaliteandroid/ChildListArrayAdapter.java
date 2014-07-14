@@ -26,7 +26,6 @@ public class ChildListArrayAdapter extends ArrayAdapter<VideoModelNode> {
 	public ChildListArrayAdapter(Context context, List<VideoModelNode> nodes) {
 		 super(context, R.layout.list_cell);
 		 items = nodes;
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
