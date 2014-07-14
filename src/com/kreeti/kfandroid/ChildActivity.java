@@ -9,15 +9,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.example.kaliteandroid.R;
 import com.ipaulpro.afilechooser.utils.FileUtils;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +39,7 @@ public class ChildActivity extends Activity{
     private static final int REQUEST_CODE = 6384;
     private static final String TAG = "FileChooserActivity";
     public String fileDirectoryBasePath;
-    public String fileDirectoryVideoPath;
+    public String fileDirectoryJSONFilePath;
     public File selectedFile;
     public boolean isFileChooserOn;
     public ProgressDialog dialog;
@@ -43,11 +47,17 @@ public class ChildActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
 		context = this;
-		setContentView(R.layout.activity_child);		
-    	showChooser("Choose a JSON file");	
+		setContentView(R.layout.activity_child);    		
     	dialog = ProgressDialog.show(this, "", "Loading...");
+    	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
+		fileDirectoryJSONFilePath = settings.getString("BasePath", "").toString();
+		if(fileDirectoryJSONFilePath.isEmpty() || fileDirectoryJSONFilePath == null)
+			showChooser("Choose a JSON file");
+		else{
+			createJsonFromFile(fileDirectoryJSONFilePath);
+		}
     	ListView listView = (ListView)findViewById(R.id.list);
     	
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -160,7 +170,7 @@ public class ChildActivity extends Activity{
 		                            if (path != null && FileUtils.isLocal(path)) {
 		                                selectedFile = new File(path);  
 		                                fileDirectoryBasePath = path.replace(selectedFile.getName(), "");	                                
-		                                fileDirectoryVideoPath = path;
+		                                fileDirectoryJSONFilePath = path;
 		                                	
 		                            }
 		                        } catch (Exception e) {
@@ -171,41 +181,52 @@ public class ChildActivity extends Activity{
 		                break;
 		        }	       
 		        if(selectedFile.getName().endsWith(".json")) {
-		        	StringBuilder text = new StringBuilder();
-
-		        	try {
-		        	    BufferedReader br = new BufferedReader(new FileReader(selectedFile));
-		        	    String line;
-
-		        	    while ((line = br.readLine()) != null) {
-		        	        text.append(line);
-		        	        text.append("\n");
-		        	    }
-		        	    br.close();
-		        	}
-		        	catch (IOException e) {
-		        		e.printStackTrace();
-		        	}
-			 
-					JSONObject jsonObject = null;
-					try {
-						jsonObject = new JSONObject(text.toString());
-						parseJSON(jsonObject);		  
-					} catch (JSONException e) {					
-						e.printStackTrace();
-					}
-					
-			        isFileChooserOn = false;
-			        if(dialog != null) {
-			   		 dialog.dismiss();
-			   		 dialog = null;
-			   	}
+		        	createJsonFromFile(selectedFile.getPath());
 			        super.onActivityResult(requestCode, resultCode, data);
 			    } else {
 			    	showChooser("Choose a JSON file");
 			    }
 		    }
 		    
+		    public void createJsonFromFile(String path) {
+		    	File selectedFile = new File(path);
+		    	if(!selectedFile.exists())
+		    		showChooser("Choose a JSON file");
+		    	StringBuilder text = new StringBuilder();
+
+	        	try {
+	        	    BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+	        	    String line;
+
+	        	    while ((line = br.readLine()) != null) {
+	        	        text.append(line);
+	        	        text.append("\n");
+	        	    }
+	        	    br.close();
+	        	}
+	        	catch (IOException e) {
+	        		e.printStackTrace();
+	        	}
+		 
+				JSONObject jsonObject = null;
+				try {
+					jsonObject = new JSONObject(text.toString());
+					parseJSON(jsonObject);		  
+				} catch (JSONException e) {					
+					e.printStackTrace();
+				}
+				
+				isFileChooserOn = false;
+		        if(dialog != null) {
+		   		 dialog.dismiss();
+		   		 dialog = null;
+		   		 
+		   		SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString("BasePath",fileDirectoryJSONFilePath);
+				editor.commit();
+		   	}
+		 }		    
 		    public void setListAdapter() {		    	
 		    	ChildListArrayAdapter adapter = new ChildListArrayAdapter(this, currentNode.children);
 		    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
