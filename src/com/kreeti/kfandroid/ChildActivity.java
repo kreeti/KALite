@@ -38,8 +38,8 @@ public class ChildActivity extends Activity{
     VideoModelNode currentNode;    
     private static final int REQUEST_CODE = 6384;
     private static final String TAG = "FileChooserActivity";
-    public String fileDirectoryBasePath;
-    public String fileDirectoryJSONFilePath;
+    private String fileDirectoryVideoPath;
+    
     public File selectedFile;
     public boolean isFileChooserOn;
     public ProgressDialog dialog;
@@ -52,7 +52,7 @@ public class ChildActivity extends Activity{
 		setContentView(R.layout.activity_child);    		
     	dialog = ProgressDialog.show(this, "", "Loading...");
     	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
-		fileDirectoryJSONFilePath = settings.getString("BasePath", "").toString();
+		String fileDirectoryJSONFilePath = settings.getString("IndexFilePath", "").toString();
 		if(fileDirectoryJSONFilePath.isEmpty() || fileDirectoryJSONFilePath == null)
 			showChooser("Choose a JSON file");
 		else{
@@ -70,11 +70,11 @@ public class ChildActivity extends Activity{
 		    			currentNode = j;
 		    			setListAdapter();
 		    		} else if(j.videoFileName != null && !j.videoFileName.isEmpty()) {		    			
-		    			File file = new File(fileDirectoryBasePath+"videos/"+ j.videoFileName);
+		    			File file = new File(fileDirectoryVideoPath+ j.videoFileName);
 		    			
 		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
-				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/" + j.videoFileName);
+				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName);
 				    		ChildActivity.this.startActivity(videoPlayerIntent);
 		            	}		    				
 		    		}	    			
@@ -157,6 +157,7 @@ public class ChildActivity extends Activity{
 
 		    @Override
 		    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		    	String path = null;
 		        switch (requestCode) {
 		            case REQUEST_CODE:	                
 		                if (resultCode == RESULT_OK) {
@@ -164,15 +165,9 @@ public class ChildActivity extends Activity{
 		                        final Uri uri = data.getData();
 		                        Log.i(TAG, "Uri = " + uri.toString());
 		                        try {	                            
-		                            final String path = FileUtils.getPath(this, uri);
+		                            path = FileUtils.getPath(this, uri);
 		                            Toast.makeText(this,
 		                                    "File Selected: " + path, Toast.LENGTH_LONG).show();
-		                            if (path != null && FileUtils.isLocal(path)) {
-		                                selectedFile = new File(path);  
-		                                fileDirectoryBasePath = path.replace(selectedFile.getName(), "");	                                
-		                                fileDirectoryJSONFilePath = path;
-		                                	
-		                            }
 		                        } catch (Exception e) {
 		                            Log.e("FileSelectorTestActivity", "File select error", e);
 		                        }
@@ -180,8 +175,14 @@ public class ChildActivity extends Activity{
 		                }
 		                break;
 		        }	       
-		        if(selectedFile.getName().endsWith(".json")) {
-		        	createJsonFromFile(selectedFile.getPath());
+		        if(path.endsWith(".json")) {
+		        	createJsonFromFile(path);
+
+		        	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
+					SharedPreferences.Editor editor = settings.edit();
+					editor.putString("IndexFilePath", path);
+					editor.commit();
+
 			        super.onActivityResult(requestCode, resultCode, data);
 			    } else {
 			    	showChooser("Choose a JSON file");
@@ -215,21 +216,17 @@ public class ChildActivity extends Activity{
 				} catch (JSONException e) {					
 					e.printStackTrace();
 				}
-				
+
+				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + "videos/";
 				isFileChooserOn = false;
 		        if(dialog != null) {
 		   		 dialog.dismiss();
 		   		 dialog = null;
-		   		 
-		   		SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putString("BasePath",fileDirectoryJSONFilePath);
-				editor.commit();
 		   	}
 		 }		    
 		    public void setListAdapter() {		    	
 		    	ChildListArrayAdapter adapter = new ChildListArrayAdapter(this, currentNode.children);
-		    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
+		    	adapter.videoDirectoryPath = fileDirectoryVideoPath;	    		    	
 		    	ListView myList = (ListView)findViewById(R.id.list);
 		    	myList.setAdapter(adapter);	
 		    }

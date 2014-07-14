@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 public class ChildListArrayAdapter extends ArrayAdapter<VideoModelNode> {	
 	private static List<VideoModelNode> items;		
-	public String fileDirectoryBasePath;
+	public String videoDirectoryPath;
 	
 	public ChildListArrayAdapter(Context context, List<VideoModelNode> nodes) {
 		 super(context, R.layout.list_cell);
@@ -53,7 +53,7 @@ public class ChildListArrayAdapter extends ArrayAdapter<VideoModelNode> {
             	imageView.setImageResource(drawable.ic_action_next);            	        	
             } else {
             	imageView.setImageResource(drawable.video_icon_active); 
-            	File file = new File(fileDirectoryBasePath+"videos/"+node.videoFileName);
+            	File file = new File(videoDirectoryPath+node.videoFileName);
             
             	if(node.isVideoURLExist && !file.exists()) {
             		textView.setTextColor(Color.GRAY); 
