@@ -3,11 +3,13 @@
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
 
-package com.example.kaliteandroid;
+package com.kreetifoundation.kaliteandroid;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
+
+import com.example.kaliteandroid.R;
 
 import android.app.Activity;
 import android.content.Intent;

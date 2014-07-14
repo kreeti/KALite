@@ -3,7 +3,9 @@
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
 
-package com.example.kaliteandroid;
+package com.kreetifoundation.kaliteandroid;
+import com.example.kaliteandroid.R;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;

@@ -3,7 +3,7 @@
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
 
-package com.example.kaliteandroid;
+package com.kreetifoundation.kaliteandroid;
 
 public class VideoModelClass {
 public String title;

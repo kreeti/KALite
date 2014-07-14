@@ -1,4 +1,9 @@
-package com.example.kaliteandroid;
+/*
+ *	Created by Nabarun Banerjee on 11/07/14.
+ *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
+ */
+
+package com.kreetifoundation.kaliteandroid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -6,12 +11,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.example.kaliteandroid.R;
 import com.ipaulpro.afilechooser.utils.FileUtils;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -22,7 +31,7 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class BaseListActivity extends Activity {
+public class BaseActivity extends Activity {
 	public JSONArray jsonArray;
 	public JSONObject baseJobj;
     public JSONObject jobj;
@@ -32,7 +41,7 @@ public class BaseListActivity extends Activity {
     List<VideoModelClass> subject;
     List<JSONObject>allChildrens = new ArrayList<JSONObject>();	
     private static final int REQUEST_CODE = 6384;
-    private static final String TAG = "FileChooserExampleActivity";
+    private static final String TAG = "FileChooserActivity";
     public String fileDirectoryBasePath;
     public String fileDirectoryVideoPath;
     public File selectedFile;
@@ -97,40 +106,34 @@ public class BaseListActivity extends Activity {
 			}  
 					
 			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} catch (JSONException e) {			
 			e.printStackTrace();
 		}	
 		setListAdapter();		
 		
 	}	 
 	 
-	 public void showChooser(String titleString) {
-	        // Use the GET_CONTENT intent from the utility class
+	 public void showChooser(String titleString) {	        
 		 	isFileChooserOn = true;
-	        Intent target = FileUtils.createGetContentIntent();
-	        // Create the chooser Intent
+	        Intent target = FileUtils.createGetContentIntent();	        
 	        Intent intent = Intent.createChooser(
 	                target, titleString);
 	        try {
 	            startActivityForResult(intent, REQUEST_CODE);
 	        } catch (ActivityNotFoundException e) {
-	            // The reason for the existence of aFileChooser
+	            
 	        }
 	    }
 
 	    @Override
 	    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	        switch (requestCode) {
-	            case REQUEST_CODE:
-	                // If the file selection was successful
+	            case REQUEST_CODE:	                
 	                if (resultCode == RESULT_OK) {
-	                    if (data != null) {
-	                        // Get the URI of the selected file
+	                    if (data != null) {	                        
 	                        final Uri uri = data.getData();
 	                        Log.i(TAG, "Uri = " + uri.toString());
-	                        try {
-	                            // Get the file path from the URI
+	                        try {	                            
 	                            final String path = FileUtils.getPath(this, uri);
 	                            Toast.makeText(this,
 	                                    "File Selected: " + path, Toast.LENGTH_LONG).show();
@@ -152,27 +155,22 @@ public class BaseListActivity extends Activity {
 				Object obj = null;
 				try {
 					obj = parser.parse(new FileReader(selectedFile));
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
+				} catch (FileNotFoundException e) {					
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+				} catch (IOException e) {					
 					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+				} catch (ParseException e) {					
 					e.printStackTrace();
 				}
 		 
 				JSONObject jsonObject = null;
 				try {
 					jsonObject = new JSONObject(obj.toString());
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+				} catch (JSONException e) {					
 					e.printStackTrace();
 				}
 				if(jsonObject != null)
-					parseJSON(jsonObject);
-		    
+					parseJSON(jsonObject);		    
 				
 		        isFileChooserOn = false;
 		        if(dialog != null) {
@@ -186,7 +184,7 @@ public class BaseListActivity extends Activity {
 	        }
 	    
 	    private void setListAdapter() {		    	
-	    	KALiteArrayAdapter adapter = new KALiteArrayAdapter(this, subject);
+	    	ChildListArrayAdapter adapter = new ChildListArrayAdapter(this, subject);
 	    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
 	    	ListView myList = (ListView)findViewById(R.id.list);
 	    	myList.setAdapter(adapter);	

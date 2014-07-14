@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.kaliteandroid.MainActivity"
+            android:name="com.kreetifoundation.kaliteandroid.MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -24,12 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />               
             </intent-filter>
         </activity>
-        <activity android:name=".ChildActivity" android:label="@string/app_name"            
+        <activity android:name="com.kreetifoundation.kaliteandroid.ChildActivity" android:label="@string/app_name"            
    		    android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".VideoPlayerActivity" android:label="@string/app_name"
+        <activity android:name="com.kreetifoundation.kaliteandroid.VideoPlayerActivity" android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".FileChooserActivity" android:label="@string/app_name"
+        <activity android:name="com.kreetifoundation.kaliteandroid.FileChooserActivity" android:label="@string/app_name"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
          <activity
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"

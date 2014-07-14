@@ -2,11 +2,15 @@
  *	Created by Nabarun Banerjee on 11/07/14.
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
-package com.example.kaliteandroid;
+package com.kreetifoundation.kaliteandroid;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONObject;
+
+import com.example.kaliteandroid.R;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;

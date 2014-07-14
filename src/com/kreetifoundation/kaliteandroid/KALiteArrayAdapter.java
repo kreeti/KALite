@@ -1,12 +1,8 @@
-/*
- *	Created by Nabarun Banerjee on 11/07/14.
- *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
- */
-
-package com.example.kaliteandroid;
+package com.kreetifoundation.kaliteandroid;
 import java.io.File;
 import java.util.List;
 
+import com.example.kaliteandroid.R;
 import com.example.kaliteandroid.R.drawable;
 
 import android.content.Context;
@@ -18,11 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ChildListArrayAdapter extends ArrayAdapter<VideoModelClass> {
+public class KALiteArrayAdapter extends ArrayAdapter<VideoModelClass> {
 	
 	private static List<VideoModelClass> items;		
 	public String fileDirectoryBasePath;
-	public ChildListArrayAdapter(Context context, List<VideoModelClass> subject) {
+	public KALiteArrayAdapter(Context context, List<VideoModelClass> subject) {
 		 super(context, R.layout.list_cell);
 		 items = subject;
 		// TODO Auto-generated constructor stub
