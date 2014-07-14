@@ -27,6 +27,7 @@ public class MainActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
+		
 		context = this;
 		setContentView(R.layout.activity_main);
 		TextView textView = (TextView)findViewById(R.id.kreetiFoundationTextView);
@@ -42,8 +43,6 @@ public class MainActivity extends Activity{
 	    		finish();
 	        } 
 	    },2000);
-		
-		
 	}
 	
 	@Override 

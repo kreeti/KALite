@@ -19,13 +19,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ChildListArrayAdapter extends ArrayAdapter<VideoModelClass> {	
-	private static List<VideoModelClass> items;		
+public class ChildListArrayAdapter extends ArrayAdapter<VideoModelNode> {	
+	private static List<VideoModelNode> items;		
 	public String fileDirectoryBasePath;
 	
-	public ChildListArrayAdapter(Context context, List<VideoModelClass> subject) {
+	public ChildListArrayAdapter(Context context, List<VideoModelNode> nodes) {
 		 super(context, R.layout.list_cell);
-		 items = subject;
+		 items = nodes;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -43,28 +43,31 @@ public class ChildListArrayAdapter extends ArrayAdapter<VideoModelClass> {
             v = li.inflate(R.layout.list_cell, null);           
         }
          
-       VideoModelClass details = items.get(position);         
-        if(details != null) {            
+       VideoModelNode node = items.get(position);   
+       
+        if(node != null) {            
             TextView textView = (TextView)v.findViewById(R.id.textView);
             if(textView != null) 
-            	textView.setText(details.title);
+            	textView.setText(node.title);
             
             ImageView imageView = (ImageView)v.findViewById(R.id.imageView);
-            if(details.isChildExist) {
+            
+            if(node.children != null) {
             	imageView.setImageResource(drawable.ic_action_next);            	        	
             } else {
             	imageView.setImageResource(drawable.video_icon_active); 
-            	File file = new File(fileDirectoryBasePath+"videos/"+details.videoFileName);
-            	if(details.isVideoURLExist && !file.exists()) {
+            	File file = new File(fileDirectoryBasePath+"videos/"+node.videoFileName);
+            
+            	if(node.isVideoURLExist && !file.exists()) {
             		textView.setTextColor(Color.GRAY); 
             		imageView.setImageResource(drawable.video_icon_inactive);
-                } else if(details.isVideoURLExist && file.exists()) {
+                } else if(node.isVideoURLExist && file.exists()) {
                 	textView.setTextColor(Color.BLACK);
                 } else {
                 	textView.setTextColor(Color.LTGRAY);
                 	imageView.setImageResource(drawable.video_icon_inactive);
                 }            	
-            }            
+            } 
         }
          
         return v;

@@ -4,19 +4,19 @@
  */
 
 package com.kreetifoundation.kaliteandroid;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import com.example.kaliteandroid.R;
 import com.ipaulpro.afilechooser.utils.FileUtils;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -28,14 +28,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class BaseActivity extends Activity {
-	public JSONArray jsonArray;
-	public JSONObject baseJobj;
-    public JSONObject jobj;
-    public String topic;    
-    public String[] subjectArray;
-    public JSONObject jsonObj;
-    List<VideoModelClass> subject;
-    List<JSONObject>allChildrens = new ArrayList<JSONObject>();	
+
+    VideoModelNode rootNode;
+    VideoModelNode currentNode;
+    
     private static final int REQUEST_CODE = 6384;
     private static final String TAG = "FileChooserActivity";
     public String fileDirectoryBasePath;
@@ -52,38 +48,8 @@ public class BaseActivity extends Activity {
 	
 	public void parseJSON(JSONObject jsonObject) {
 		try {
-			subject = new ArrayList<VideoModelClass>();
-			allChildrens = new ArrayList<JSONObject>();
-			if(jsonObject != null) {
-				jsonObj = jsonObject;
-			}		
-			//parse the json object..	
-			if(jsonObj.has("children")) {
-				JSONArray jsonArray = jsonObj.getJSONArray("children");
-				for(int i = 0; i < jsonArray.length(); i++) {				
-	                jsonObj = jsonArray.getJSONObject(i);
-	                allChildrens.add(jsonObj);
-	                VideoModelClass model = new VideoModelClass();
-	                
-	                if(jsonObj.has("title")) {
-	                	model.title = jsonObj.getString("title");	                	
-	                	model.isChildExist = jsonObj.has("children");
-	                }   
-	                
-	                if(jsonObj.has("download_urls")) {
-	                	model.isVideoURLExist = true;	
-	                	model.isChildExist = jsonObj.has("children");
-	                	String fileName = jsonObj.getString("id");
-	                	fileName = fileName+".mp4";
-	                	if(fileName != null && !fileName.isEmpty())
-	                		model.videoFileName = fileName;
-	                }
-	                
-	                	subject.add(model);	                
-	            }	
-			}  
-					
-			
+			rootNode = parseNode(jsonObject, null);
+			currentNode = rootNode;
 		} catch (JSONException e) {			
 			e.printStackTrace();
 		}	
@@ -91,6 +57,34 @@ public class BaseActivity extends Activity {
 		
 	}	 
 	 
+	private VideoModelNode parseNode(JSONObject json, VideoModelNode parent) throws JSONException {
+        VideoModelNode model = new VideoModelNode();
+        model.parent = parent;
+        
+        if(json.has("title")) {
+        	model.title = json.getString("title");	                	
+        }   
+        
+        if(json.has("download_urls")) {
+        	model.isVideoURLExist = true;	
+        	String fileName = json.getString("id");
+        	fileName = fileName+".mp4";        	
+        	model.videoFileName = fileName;
+        }
+
+        if(!json.has("children"))
+        	return model;
+        
+        JSONArray jsonArray = json.getJSONArray("children");
+        model.children = new ArrayList<VideoModelNode>();
+    	
+        for(int i = 0; i < jsonArray.length(); i++) {	
+        	JSONObject child = jsonArray.getJSONObject(i);
+			model.children.add(parseNode(child, model));	                
+        }
+        return model;
+	}
+	
 	 public void showChooser(String titleString) {	        
 		 	isFileChooserOn = true;
 	        Intent target = FileUtils.createGetContentIntent();	        
@@ -129,26 +123,29 @@ public class BaseActivity extends Activity {
 	                break;
 	        }	       
 	        if(selectedFile.getName().endsWith(".json")) {
-	        	JSONParser parser = new JSONParser(); 
-				Object obj = null;
-				try {
-					obj = parser.parse(new FileReader(selectedFile));
-				} catch (FileNotFoundException e) {					
-					e.printStackTrace();
-				} catch (IOException e) {					
-					e.printStackTrace();
-				} catch (ParseException e) {					
-					e.printStackTrace();
-				}
+	        	StringBuilder text = new StringBuilder();
+
+	        	try {
+	        	    BufferedReader br = new BufferedReader(new FileReader(selectedFile));
+	        	    String line;
+
+	        	    while ((line = br.readLine()) != null) {
+	        	        text.append(line);
+	        	        text.append("\n");
+	        	    }
+	        	    br.close();
+	        	}
+	        	catch (IOException e) {
+	        		e.printStackTrace();
+	        	}
 		 
 				JSONObject jsonObject = null;
 				try {
-					jsonObject = new JSONObject(obj.toString());
+					jsonObject = new JSONObject(text.toString());
+					parseJSON(jsonObject);		  
 				} catch (JSONException e) {					
 					e.printStackTrace();
 				}
-				if(jsonObject != null)
-					parseJSON(jsonObject);		    
 				
 		        isFileChooserOn = false;
 		        if(dialog != null) {
@@ -159,13 +156,12 @@ public class BaseActivity extends Activity {
 		    } else {
 		    	showChooser("Choose a JSON file");
 		    }
-	        }
+	    }
 	    
-	    private void setListAdapter() {		    	
-	    	ChildListArrayAdapter adapter = new ChildListArrayAdapter(this, subject);
+	    public void setListAdapter() {		    	
+	    	ChildListArrayAdapter adapter = new ChildListArrayAdapter(this, currentNode.children);
 	    	adapter.fileDirectoryBasePath = fileDirectoryBasePath;	    		    	
 	    	ListView myList = (ListView)findViewById(R.id.list);
 	    	myList.setAdapter(adapter);	
-	    }     
-	    	
+	    }	
 }

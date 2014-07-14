@@ -32,21 +32,22 @@ public class ChildActivity extends BaseActivity{
     	showChooser("Choose a JSON file");	
     	dialog = ProgressDialog.show(this, "", "Loading...");
     	ListView listView = (ListView)findViewById(R.id.list);
+    	
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		    @Override
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
-		    	if(allChildrens.size() > 0) {	
-		    		lastDisplayedPosition++;
-		    		lastDisplayedJsonObj.add(allChildrens.get(pos));
-		    		JSONObject j = allChildrens.get(pos);
+		    	if(currentNode.children.size() > 0) {	
+		    		VideoModelNode j = currentNode.children.get(pos);
 		    		
-		    		if(j.has("children"))
-		    			parseJSON(allChildrens.get(pos));
-		    		else if(subject.get(pos).videoFileName != null && !subject.get(pos).videoFileName.isEmpty()) {		    			
-		    			File file = new File(fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
+		    		if(j.children != null) {
+		    			currentNode = j;
+		    			setListAdapter();
+		    		} else if(j.videoFileName != null && !j.videoFileName.isEmpty()) {		    			
+		    			File file = new File(fileDirectoryBasePath+"videos/"+ j.videoFileName);
+		    			
 		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(ChildActivity.this, VideoPlayerActivity.class);	
-				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/"+subject.get(pos).videoFileName);
+				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryBasePath+"videos/" + j.videoFileName);
 				    		ChildActivity.this.startActivity(videoPlayerIntent);
 		            	}		    				
 		    		}	    			
@@ -61,15 +62,11 @@ public class ChildActivity extends BaseActivity{
 	
 	 @Override 
      public void onBackPressed() { 		
-		lastDisplayedPosition--;	 	
-		if(lastDisplayedPosition < 0) {			 
+		if(currentNode.parent == null) {			 
 			super.onBackPressed();		 	
 		 } else {
-			 if(lastDisplayedPosition == 0) {
-					parseJSON(baseJobj);
-				} else {
-					parseJSON(lastDisplayedJsonObj.get(lastDisplayedPosition));
-				}
+			 currentNode = currentNode.parent;
+			 setListAdapter();
 		 }			 
 		 
      } 
