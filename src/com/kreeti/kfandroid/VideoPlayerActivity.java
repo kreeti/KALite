@@ -3,7 +3,7 @@
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
 
-package com.kreetifoundation.kaliteandroid;
+package com.kreeti.kfandroid;
 import com.example.kaliteandroid.R;
 
 import android.app.Activity;

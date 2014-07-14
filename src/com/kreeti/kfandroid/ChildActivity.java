@@ -2,7 +2,7 @@
  *	Created by Nabarun Banerjee on 11/07/14.
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
-package com.kreetifoundation.kaliteandroid;
+package com.kreeti.kfandroid;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
