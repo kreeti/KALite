@@ -4,13 +4,7 @@
  */
 
 package com.kreeti.kfandroid;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONObject;
-
 import com.example.kaliteandroid.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,16 +13,11 @@ import android.os.Handler;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MainActivity extends Activity{	
-	MainActivity context;
-	int lastDisplayedPosition = 0;
-	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
-	
+public class MainActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		
-		context = this;
 		setContentView(R.layout.activity_main);
 		TextView textView = (TextView)findViewById(R.id.kreetiFoundationTextView);
 		RelativeLayout mainRelativeLayout = (RelativeLayout)findViewById(R.id.kreetiFoundationLayout);

@@ -8,15 +8,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.example.kaliteandroid.R;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -30,25 +26,18 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TopicListActivity extends Activity{	
-	TopicListActivity context;
-	int lastDisplayedPosition = 0;
-	List<JSONObject>lastDisplayedJsonObj = new ArrayList<JSONObject>();	
+public class TopicListActivity extends Activity{		
 	VideoModelNode rootNode;
     VideoModelNode currentNode;    
     private static final int REQUEST_CODE = 6384;
     private static final String TAG = "FileChooserActivity";
     private String fileDirectoryVideoPath;
-    
-    public File selectedFile;
-    public boolean isFileChooserOn;
     public ProgressDialog dialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);		
-		context = this;
 		setContentView(R.layout.activity_child);    		
     	dialog = ProgressDialog.show(this, "", "Loading...");
     	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
@@ -143,8 +132,7 @@ public class TopicListActivity extends Activity{
 	        return model;
 		}
 		
-		 public void showChooser(String titleString) {	        
-			 	isFileChooserOn = true;
+		 public void showChooser(String titleString) { 
 		        Intent target = FileUtils.createGetContentIntent();	        
 		        Intent intent = Intent.createChooser(
 		                target, titleString);
@@ -218,8 +206,7 @@ public class TopicListActivity extends Activity{
 				}
 
 				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + "videos/";
-				isFileChooserOn = false;
-		        if(dialog != null) {
+				 if(dialog != null) {
 		   		 dialog.dismiss();
 		   		 dialog = null;
 		   	}

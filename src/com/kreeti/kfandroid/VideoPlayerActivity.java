@@ -5,7 +5,6 @@
 
 package com.kreeti.kfandroid;
 import com.example.kaliteandroid.R;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +19,7 @@ public class VideoPlayerActivity extends Activity {
 		playVideoFromSDCard(mountLocation);		
 	}
 	
-	public void playVideoFromSDCard(String fileName){		
+	public void playVideoFromSDCard(String fileName) {		
 		Uri vidFile = Uri.parse(fileName);
 		VideoView videoView = (VideoView) findViewById(R.id.videoView1);
 		videoView.setVideoURI(vidFile);
@@ -29,7 +28,7 @@ public class VideoPlayerActivity extends Activity {
 	}
 	
 	@Override 
-    public void onBackPressed()    { 		
+    public void onBackPressed() { 		
 		super.onBackPressed();
 		 
      } 
