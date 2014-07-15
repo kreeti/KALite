@@ -60,9 +60,11 @@ public class TopicListActivity extends Activity{
 		    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {		    	
 		    	if(currentNode.children.size() > 0) {	
 		    		VideoModelNode j = currentNode.children.get(pos);
-		    		
+		    		if(!j.isVideo)
+		    			setTitle(j.title + " Kreeti Foundation");
 		    		if(j.children != null) {
 		    			currentNode = j;
+		    			
 		    			setListAdapter();
 		    		} else if(j.id != null && j.isVideo) {		    			
 		    			File file = new File(fileDirectoryVideoPath+ j.videoFileName());
@@ -71,8 +73,10 @@ public class TopicListActivity extends Activity{
 		            		Intent videoPlayerIntent = new Intent(TopicListActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
-		            	}		    				
-		    		}	    			
+		            	}
+		    		}else{
+	            		setTitle(j.parent.title + " Kreeti Foundation");
+	            	}	    			
 		    		 	
 		    	}	
 		    			    	
@@ -88,6 +92,7 @@ public class TopicListActivity extends Activity{
 			super.onBackPressed();		 	
 		 } else {
 			 currentNode = currentNode.parent;
+			 setTitle(currentNode.title + " Kreeti Foundation");
 			 setListAdapter();
 		 }
     } 
@@ -142,10 +147,9 @@ public class TopicListActivity extends Activity{
 	    return children;
 	}
 		
-		public void showChooser(String titleString) { 
-		        Intent target = FileUtils.createGetContentIntent();	        
-		        Intent intent = Intent.createChooser(
-		                target, titleString);
+	public void showChooser(String titleString) { 
+		Intent target = FileUtils.createGetContentIntent();	        
+        Intent intent = Intent.createChooser(target, titleString);
 		        try {
 		            startActivityForResult(intent, REQUEST_CODE);
 		        } catch (ActivityNotFoundException e) {
@@ -153,11 +157,11 @@ public class TopicListActivity extends Activity{
 		        }
 		    }
 
-		@Override
-	    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		    	String path = null;
-		        switch (requestCode) {
-		            case REQUEST_CODE:	                
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		 String path = null;
+		 switch (requestCode) {
+		        case REQUEST_CODE:	                
 		                if (resultCode == RESULT_OK) {
 		                    if (data != null) {	                        
 		                        final Uri uri = data.getData();
@@ -190,9 +194,9 @@ public class TopicListActivity extends Activity{
 			    } else {
 			    	showChooser("Choose a JSON file");
 			    }
-		    }	  	    
+		}	  	    
 
-	    public void createJsonFromFile(String path) throws IOException {
+	public void createJsonFromFile(String path) throws IOException {
 		    	File selectedFile = new File(path);
 		    	if(!selectedFile.exists())
 		    		showChooser("Choose a JSON file");
@@ -210,7 +214,7 @@ public class TopicListActivity extends Activity{
 		   	}
 		 }
 		    
-		public void setListAdapter() {		    	
+	public void setListAdapter() {		    	
 		    	TopicsListArrayAdapter adapter = new TopicsListArrayAdapter(this, currentNode.children);
 		    	adapter.videoDirectoryPath = fileDirectoryVideoPath;	    		    	
 		    	ListView myList = (ListView)findViewById(R.id.list);
