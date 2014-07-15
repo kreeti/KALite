@@ -51,18 +51,18 @@ public class TopicsListArrayAdapter extends ArrayAdapter<VideoModelNode> {
             
             if(node.children != null) {
             	imageView.setImageResource(drawable.ic_action_next);            	        	
+            } else if (!node.isVideo) {
+            	textView.setTextColor(Color.LTGRAY);
+            	imageView.setImageResource(drawable.video_icon_inactive);
             } else {
             	imageView.setImageResource(drawable.video_icon_active); 
-            	File file = new File(videoDirectoryPath+node.videoFileName);
+            	File file = new File(videoDirectoryPath + node.videoFileName());
             
-            	if(node.isVideoURLExist && !file.exists()) {
-            		textView.setTextColor(Color.GRAY); 
-            		imageView.setImageResource(drawable.video_icon_inactive);
-                } else if(node.isVideoURLExist && file.exists()) {
+            	if(file.exists()) {
                 	textView.setTextColor(Color.BLACK);
                 } else {
-                	textView.setTextColor(Color.LTGRAY);
-                	imageView.setImageResource(drawable.video_icon_inactive);
+            		textView.setTextColor(Color.GRAY); 
+            		imageView.setImageResource(drawable.video_icon_inactive);
                 }            	
             } 
         }

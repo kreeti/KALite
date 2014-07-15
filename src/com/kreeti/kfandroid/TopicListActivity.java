@@ -3,14 +3,14 @@
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
 package com.kreeti.kfandroid;
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import com.example.kaliteandroid.R;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import android.app.Activity;
@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,7 +46,12 @@ public class TopicListActivity extends Activity{
 		if(fileDirectoryJSONFilePath.isEmpty() || fileDirectoryJSONFilePath == null)
 			showChooser("Choose a JSON file");
 		else{
-			createJsonFromFile(fileDirectoryJSONFilePath);
+			try {
+				createJsonFromFile(fileDirectoryJSONFilePath);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
     	ListView listView = (ListView)findViewById(R.id.list);
     	
@@ -58,12 +64,12 @@ public class TopicListActivity extends Activity{
 		    		if(j.children != null) {
 		    			currentNode = j;
 		    			setListAdapter();
-		    		} else if(j.videoFileName != null && !j.videoFileName.isEmpty()) {		    			
-		    			File file = new File(fileDirectoryVideoPath+ j.videoFileName);
+		    		} else if(j.id != null && j.isVideo) {		    			
+		    			File file = new File(fileDirectoryVideoPath+ j.videoFileName());
 		    			
 		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(TopicListActivity.this, VideoPlayerActivity.class);	
-				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName);
+				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
 		            	}		    				
 		    		}	    			
@@ -76,63 +82,67 @@ public class TopicListActivity extends Activity{
 	}
 	
 	
-	 @Override 
-     public void onBackPressed() { 		
+	@Override 
+    public void onBackPressed() { 		
 		if(currentNode.parent == null) {			 
 			super.onBackPressed();		 	
 		 } else {
 			 currentNode = currentNode.parent;
 			 setListAdapter();
-		 }			 
-		 
-     } 
+		 }
+    } 
 	
 	 @Override 
-		protected void onSaveInstanceState(Bundle icicle) {	      
+	protected void onSaveInstanceState(Bundle icicle) {	      
 		      super.onSaveInstanceState(icicle);
 		    }
 	
 	 
-	 public void parseJSON(JSONObject jsonObject) {
-			try {
-				rootNode = parseNode(jsonObject, null);
-				currentNode = rootNode;
-			} catch (JSONException e) {			
-				e.printStackTrace();
-			}	
-			setListAdapter();		
+	public void parseJSON(JsonReader  jsonReader) throws IOException {
+		try {
+			rootNode = parseNode(jsonReader, null);
+			currentNode = rootNode;
+		} catch (JSONException e) {			
+			e.printStackTrace();
+		}	
+		setListAdapter();		
 			
-		}	 
+	}	 
 		 
-		private VideoModelNode parseNode(JSONObject json, VideoModelNode parent) throws JSONException {
-	        VideoModelNode model = new VideoModelNode();
-	        model.parent = parent;
-	        
-	        if(json.has("title")) {
-	        	model.title = json.getString("title");	                	
-	        }   
-	        
-	        if(json.has("download_urls")) {
-	        	model.isVideoURLExist = true;	
-	        	String fileName = json.getString("id");
-	        	fileName = fileName+".mp4";        	
-	        	model.videoFileName = fileName;
+	private VideoModelNode parseNode(JsonReader jsonReader, VideoModelNode parent) throws JSONException, IOException {
+		VideoModelNode model = new VideoModelNode();
+	    model.parent = parent;	
+	    jsonReader.beginObject();
+	    while (jsonReader.hasNext()) {
+	       	String name = jsonReader.nextName();
+	        if (name.equals("title")) {
+	           	model.title = jsonReader.nextString();	            	
+	        } else if(name.equals("download_urls")){
+	           	model.isVideo = true;
+	           	jsonReader.skipValue();
+	        } else if(name.equals("id")) {
+		       	model.id = jsonReader.nextString();
+	        } else if(name.equals("children")){	
+	           	model.children = parseChildrenArray(jsonReader, model);
+	        } else {
+	            jsonReader.skipValue();
 	        }
-
-	        if(!json.has("children"))
-	        	return model;
-	        
-	        JSONArray jsonArray = json.getJSONArray("children");
-	        model.children = new ArrayList<VideoModelNode>();
-	    	
-	        for(int i = 0; i < jsonArray.length(); i++) {	
-	        	JSONObject child = jsonArray.getJSONObject(i);
-				model.children.add(parseNode(child, model));	                
-	        }
-	        return model;
-		}
+	     }      
+	     jsonReader.endObject(); 
+	     return model;
+	}
 		
-		 public void showChooser(String titleString) { 
+	public ArrayList<VideoModelNode> parseChildrenArray(JsonReader reader, VideoModelNode parent) throws IOException, JSONException {
+		ArrayList<VideoModelNode> children = new ArrayList<VideoModelNode>();
+	    reader.beginArray();
+	    while (reader.hasNext()) {
+	    	children.add(parseNode(reader, parent));
+	    }
+	    reader.endArray();
+	    return children;
+	}
+		
+		public void showChooser(String titleString) { 
 		        Intent target = FileUtils.createGetContentIntent();	        
 		        Intent intent = Intent.createChooser(
 		                target, titleString);
@@ -143,8 +153,8 @@ public class TopicListActivity extends Activity{
 		        }
 		    }
 
-		    @Override
-		    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		@Override
+	    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		    	String path = null;
 		        switch (requestCode) {
 		            case REQUEST_CODE:	                
@@ -164,7 +174,12 @@ public class TopicListActivity extends Activity{
 		                break;
 		        }	       
 		        if(path.endsWith(".json")) {
-		        	createJsonFromFile(path);
+		        	try {
+						createJsonFromFile(path);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 		        	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
 					SharedPreferences.Editor editor = settings.edit();
@@ -175,43 +190,27 @@ public class TopicListActivity extends Activity{
 			    } else {
 			    	showChooser("Choose a JSON file");
 			    }
-		    }
-		    
-		    public void createJsonFromFile(String path) {
+		    }	  	    
+
+	    public void createJsonFromFile(String path) throws IOException {
 		    	File selectedFile = new File(path);
 		    	if(!selectedFile.exists())
 		    		showChooser("Choose a JSON file");
-		    	StringBuilder text = new StringBuilder();
-
-	        	try {
-	        	    BufferedReader br = new BufferedReader(new FileReader(selectedFile));
-	        	    String line;
-
-	        	    while ((line = br.readLine()) != null) {
-	        	        text.append(line);
-	        	        text.append("\n");
-	        	    }
-	        	    br.close();
-	        	}
-	        	catch (IOException e) {
-	        		e.printStackTrace();
-	        	}
-		 
-				JSONObject jsonObject = null;
-				try {
-					jsonObject = new JSONObject(text.toString());
-					parseJSON(jsonObject);		  
-				} catch (JSONException e) {					
-					e.printStackTrace();
-				}
+		    	
+		    	InputStream inStream = new FileInputStream(selectedFile);		    	 
+		        BufferedInputStream bufferedStream = new BufferedInputStream(inStream);
+		        InputStreamReader streamReader = new InputStreamReader(bufferedStream);		 
+		        JsonReader reader = new JsonReader(streamReader);  
+		    	parseJSON(reader);
 
 				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + "videos/";
 				 if(dialog != null) {
 		   		 dialog.dismiss();
 		   		 dialog = null;
 		   	}
-		 }		    
-		    public void setListAdapter() {		    	
+		 }
+		    
+		public void setListAdapter() {		    	
 		    	TopicsListArrayAdapter adapter = new TopicsListArrayAdapter(this, currentNode.children);
 		    	adapter.videoDirectoryPath = fileDirectoryVideoPath;	    		    	
 		    	ListView myList = (ListView)findViewById(R.id.list);
