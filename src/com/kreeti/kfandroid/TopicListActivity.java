@@ -61,7 +61,7 @@ public class TopicListActivity extends Activity{
 		    	if(currentNode.children.size() > 0) {	
 		    		VideoModelNode j = currentNode.children.get(pos);
 		    		if(!j.isVideo)
-		    			setTitle(j.title + " Kreeti Foundation");
+		    			setTitle(j.title + " - Kreeti Foundation");
 		    		if(j.children != null) {
 		    			currentNode = j;
 		    			
@@ -75,7 +75,7 @@ public class TopicListActivity extends Activity{
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
 		            	}
 		    		}else{
-	            		setTitle(j.parent.title + " Kreeti Foundation");
+	            		setTitle(j.parent.title + " - Kreeti Foundation");
 	            	}	    			
 		    		 	
 		    	}	
@@ -92,7 +92,7 @@ public class TopicListActivity extends Activity{
 			super.onBackPressed();		 	
 		 } else {
 			 currentNode = currentNode.parent;
-			 setTitle(currentNode.title + " Kreeti Foundation");
+			 setTitle(currentNode.title + " - Kreeti Foundation");
 			 setListAdapter();
 		 }
     } 
