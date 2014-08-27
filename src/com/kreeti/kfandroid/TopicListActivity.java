@@ -113,6 +113,7 @@ public class TopicListActivity extends Activity{
 		} catch (JSONException e) {			
 			e.printStackTrace();
 		}	
+
 		setListAdapter();		
 			
 	}	 
