@@ -71,7 +71,10 @@ public class TopicListActivity extends Activity{
 		    			
 		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(TopicListActivity.this, VideoPlayerActivity.class);	
-				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());
+				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());				    		 
+				    		videoPlayerIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
+				    		videoPlayerIntent.putExtra("videoTitle", j.title);
+				    		
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
 		            	}
 		    		}else{
