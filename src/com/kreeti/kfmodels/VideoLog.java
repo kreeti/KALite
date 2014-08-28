@@ -1,19 +1,21 @@
 package com.kreeti.kfmodels;
 
+import java.sql.Date;
+
 public class VideoLog {
 	//private variables
    private long _id;
    private String _videoName;
    private String _startedAt;
    private String _endedAt;
-   private String _date;
+   private Date _date;
      
     // Empty constructor
-    public VideoLog(){
+    public VideoLog(String videoTitle, String videoStartedAt, String videoEndedAt, Date convertedDate){
          
     }
     // constructor
-    public VideoLog(int id, String name, String startedAt, String endedAt, String date){
+    public VideoLog(int id, String name, String startedAt, String endedAt, Date date){
         this.set_id(id);
         this.set_videoName(name);
         this.set_startedAt(startedAt);
@@ -21,8 +23,12 @@ public class VideoLog {
         this.set_date(date);
     }
      
-    // constructor
-    public VideoLog(String name, String startedAt, String endedAt, String date){
+    public VideoLog() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	// constructor
+    public void VideoLog(String name, String startedAt, String endedAt, Date date){
     	this.set_videoName(name);
         this.set_startedAt(startedAt);
         this.set_endedAt(endedAt);
@@ -52,10 +58,10 @@ public class VideoLog {
 	public void set_endedAt(String _endedAt) {
 		this._endedAt = _endedAt;
 	}
-	public String get_date() {
+	public Date get_date() {
 		return _date;
 	}
-	public void set_date(String _date) {
-		this._date = _date;
+	public void set_date(Date date) {
+		this._date = date;
 	}
 }

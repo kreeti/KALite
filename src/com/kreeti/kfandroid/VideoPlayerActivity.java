@@ -4,6 +4,7 @@
  */
 
 package com.kreeti.kfandroid;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -14,6 +15,7 @@ import com.kreeti.kfmodels.VideoLog;
 import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.MediaController;
@@ -45,11 +47,9 @@ public class VideoPlayerActivity extends Activity {
     public void onBackPressed() { 
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 		videoEndedAt = df.format(Calendar.getInstance().getTime());
-		df = new SimpleDateFormat("d MMM yyyy, HH:mm");
-		String date = df.format(Calendar.getInstance().getTime());
 		String videoTitle = getIntent().getStringExtra("videoTitle");
-		DatabaseHandler dbHandler = new DatabaseHandler(context);		
-		dbHandler.addVideoLog(new VideoLog(videoTitle, videoStartedAt, videoEndedAt, date));
+		DatabaseHandler dbHandler = new DatabaseHandler(context);
+		dbHandler.addVideoLog(new VideoLog(videoTitle, videoStartedAt, videoEndedAt, new Date(0)));
 		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
 		super.onBackPressed();
 		 

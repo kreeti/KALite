@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,7 +54,9 @@ public class TopicListActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);	
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		
+       // String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
 		setContentView(R.layout.activity_child);    		
     	dialog = ProgressDialog.show(this, "", "Loading...");
     	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
@@ -100,25 +103,7 @@ public class TopicListActivity extends Activity{
 		    			    	
 		    }
 		});	
-		
-		/*final Calendar myCalendar = Calendar.getInstance();
-
-		final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-		    @Override
-		    public void onDateSet(DatePicker view, int year, int monthOfYear,
-		            int dayOfMonth) {
-		        // TODO Auto-generated method stub
-		        myCalendar.set(Calendar.YEAR, year);
-		        myCalendar.set(Calendar.MONTH, monthOfYear);
-		        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-		        updateLabel(myCalendar);
-		    }			
-
-		};*/
-
-	
-		
+				
 	}
 
 	

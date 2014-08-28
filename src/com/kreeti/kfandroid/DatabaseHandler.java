@@ -1,5 +1,9 @@
 package com.kreeti.kfandroid;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.kreeti.kfmodels.VideoLog;
@@ -30,7 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {    	
         String CREATE_VIDEOLOG_TABLE = "CREATE TABLE " + TABLE_LOGS + "(" + KEY_ID
         	      + " integer primary key autoincrement, " + KEY_NAME + " text,"
-                + KEY_STARTED_AT + " text," + KEY_ENDED_AT + " text," + KEY_DATE + " text" + ")";
+                + KEY_STARTED_AT + " text," + KEY_ENDED_AT + " text," + KEY_DATE + " date" + ")";
         try{
         	db.execSQL(CREATE_VIDEOLOG_TABLE);
         }catch(SQLException e){
@@ -51,8 +55,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, log.get_videoName()); 
         values.put(KEY_STARTED_AT, log.get_startedAt());
-        values.put(KEY_ENDED_AT, log.get_endedAt());
-        values.put(KEY_DATE, log.get_date());     
+        values.put(KEY_ENDED_AT, log.get_endedAt());  
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
+        values.put(KEY_DATE, currentDateandTime);     
         
         long rowNo = db.insert(TABLE_LOGS, null, values);
         db.close(); 
@@ -66,12 +72,54 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                VideoLog VideoLog = new VideoLog();                
-                VideoLog.set_videoName(cursor.getString(1));
-                VideoLog.set_startedAt(cursor.getString(2));
-                VideoLog.set_endedAt(cursor.getString(3));
-                VideoLog.set_date(cursor.getString(4));               
-                VideoLogList.add(VideoLog);
+                VideoLog videoLog = new VideoLog();
+                videoLog.set_videoName(cursor.getString(1));
+                videoLog.set_startedAt(cursor.getString(2));
+                videoLog.set_endedAt(cursor.getString(3));
+                SimpleDateFormat df = new SimpleDateFormat("d MMM yyyy, HH:mm");
+                Date convertedDate;
+				try {
+					convertedDate = (Date) df.parse(cursor.getString(4));
+					videoLog.set_date(convertedDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                               
+                VideoLogList.add(videoLog);
+            } while (cursor.moveToNext());
+            cursor.close(); 
+        }     
+        
+        return VideoLogList;
+    }
+    
+    public List<VideoLog> getAllVideoLogsBetweenTwoDates(Date fromDate, Date toDate ) {
+        List<VideoLog> VideoLogList = new ArrayList<VideoLog>();  
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String fDate = sdf.format(fromDate);
+        String tDate = sdf.format(toDate);
+        String selectQuery = "SELECT * FROM " + TABLE_LOGS + "WHERE" + KEY_DATE + "BETWEEN" + fDate + "AND" + tDate;     
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);  
+                
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                VideoLog videoLog = new VideoLog();
+                videoLog.set_videoName(cursor.getString(1));
+                videoLog.set_startedAt(cursor.getString(2));
+                videoLog.set_endedAt(cursor.getString(3));
+                SimpleDateFormat df = new SimpleDateFormat("d MMM yyyy, HH:mm");
+                Date convertedDate;
+				try {
+					convertedDate = (Date) df.parse(cursor.getString(4));
+					videoLog.set_date(convertedDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                               
+                VideoLogList.add(videoLog);
             } while (cursor.moveToNext());
             cursor.close(); 
         }     
