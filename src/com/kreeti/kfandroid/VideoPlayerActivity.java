@@ -13,6 +13,7 @@ import com.kreeti.kfmodels.VideoLog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.MediaController;
@@ -47,9 +48,9 @@ public class VideoPlayerActivity extends Activity {
 		df = new SimpleDateFormat("d MMM yyyy, HH:mm");
 		String date = df.format(Calendar.getInstance().getTime());
 		String videoTitle = getIntent().getStringExtra("videoTitle");
-		DatabaseHandler db = new DatabaseHandler(context);
-		db.addVideoLog(new VideoLog(videoTitle, videoStartedAt, videoEndedAt, date));
-		List<VideoLog> videoLogList = db.getAllVideoLogs();
+		DatabaseHandler dbHandler = new DatabaseHandler(context);		
+		dbHandler.addVideoLog(new VideoLog(videoTitle, videoStartedAt, videoEndedAt, date));
+		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
 		super.onBackPressed();
 		 
      } 
