@@ -9,11 +9,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
 import org.json.JSONException;
+
 import com.example.kaliteandroid.R;
+import com.example.kaliteandroid.VideoLogReportActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
+
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -22,8 +31,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -84,10 +99,28 @@ public class TopicListActivity extends Activity{
 		    	}	
 		    			    	
 		    }
-		});		
+		});	
+		
+		/*final Calendar myCalendar = Calendar.getInstance();
+
+		final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+		    @Override
+		    public void onDateSet(DatePicker view, int year, int monthOfYear,
+		            int dayOfMonth) {
+		        // TODO Auto-generated method stub
+		        myCalendar.set(Calendar.YEAR, year);
+		        myCalendar.set(Calendar.MONTH, monthOfYear);
+		        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		        updateLabel(myCalendar);
+		    }			
+
+		};*/
+
+	
 		
 	}
-	
+
 	
 	@Override 
     public void onBackPressed() { 		
@@ -224,4 +257,25 @@ public class TopicListActivity extends Activity{
 		    	ListView myList = (ListView)findViewById(R.id.list);
 		    	myList.setAdapter(adapter);	
 		    }
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.report:
+	        	Intent reportIntent = new Intent(TopicListActivity.this, VideoLogReportActivity.class);	
+	        	TopicListActivity.this.startActivity(reportIntent);
+	            return true;	       
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 }

@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >  
+
+    <EditText
+        android:id="@+id/editTextView1"
+        android:layout_width="match_parent"
+        android:layout_height="35sp"
+        android:layout_margin="8sp"
+        android:text="@string/start_date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:ems="10"
+        android:inputType="date" >  
+             <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/editTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="35sp"
+        android:layout_margin="8sp"
+        android:text="@string/end_date"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:ems="10"
+        android:inputType="date"/>
+    
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/send_report" />
+
+   
+
+</LinearLayout>
