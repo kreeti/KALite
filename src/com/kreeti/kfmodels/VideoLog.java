@@ -9,31 +9,36 @@ public class VideoLog {
    private String _startedAt;
    private String _endedAt;
    private Date _date;
+   public String day;
      
     // Empty constructor
-    public VideoLog(String videoTitle, String videoStartedAt, String videoEndedAt, Date convertedDate){
-         
+    public VideoLog(String videoTitle, String videoStartedAt, String videoEndedAt, Date l){
+    	this.set_videoName(videoTitle);
+        this.set_startedAt(videoStartedAt);
+        this.set_endedAt(videoEndedAt);
+        this.set_date(l);
     }
     // constructor
-    public VideoLog(int id, String name, String startedAt, String endedAt, Date date){
+  /*  public VideoLog(int id, String name, String startedAt, String endedAt, Date date){
         this.set_id(id);
         this.set_videoName(name);
         this.set_startedAt(startedAt);
         this.set_endedAt(endedAt);
         this.set_date(date);
-    }
+    }*/
      
     public VideoLog() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
 	// constructor
-    public void VideoLog(String name, String startedAt, String endedAt, Date date){
+   /* public void VideoLog(String name, String startedAt, String endedAt, Date date){
     	this.set_videoName(name);
         this.set_startedAt(startedAt);
         this.set_endedAt(endedAt);
         this.set_date(date);
-    }
+    }*/
 	public long get_id() {
 		return _id;
 	}
@@ -64,4 +69,6 @@ public class VideoLog {
 	public void set_date(Date date) {
 		this._date = date;
 	}
+
+	
 }

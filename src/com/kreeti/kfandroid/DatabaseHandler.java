@@ -56,8 +56,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         values.put(KEY_NAME, log.get_videoName()); 
         values.put(KEY_STARTED_AT, log.get_startedAt());
         values.put(KEY_ENDED_AT, log.get_endedAt());  
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDateandTime = sdf.format(log.get_date());		
+       // String currentDateandTime = sdf.format(Calendar.getInstance().getTime());       
         values.put(KEY_DATE, currentDateandTime);     
         
         long rowNo = db.insert(TABLE_LOGS, null, values);
@@ -73,18 +74,18 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 VideoLog videoLog = new VideoLog();
+                String s = cursor.getString(1);
+                s = cursor.getString(2);
+                s = cursor.getString(3);
                 videoLog.set_videoName(cursor.getString(1));
                 videoLog.set_startedAt(cursor.getString(2));
                 videoLog.set_endedAt(cursor.getString(3));
-                SimpleDateFormat df = new SimpleDateFormat("d MMM yyyy, HH:mm");
-                Date convertedDate;
-				try {
-					convertedDate = (Date) df.parse(cursor.getString(4));
-					videoLog.set_date(convertedDate);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date convertedDate = null;
+				String str = cursor.getString(4);
+				videoLog.day = str;
+				//Date d = new Date(cursor.getLong(4));
+				videoLog.set_date(Date.valueOf(str));
                                
                 VideoLogList.add(videoLog);
             } while (cursor.moveToNext());
@@ -96,7 +97,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     
     public List<VideoLog> getAllVideoLogsBetweenTwoDates(Date fromDate, Date toDate ) {
         List<VideoLog> VideoLogList = new ArrayList<VideoLog>();  
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fDate = sdf.format(fromDate);
         String tDate = sdf.format(toDate);
         String selectQuery = "SELECT * FROM " + TABLE_LOGS + "WHERE" + KEY_DATE + "BETWEEN" + fDate + "AND" + tDate;     
@@ -109,16 +110,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 videoLog.set_videoName(cursor.getString(1));
                 videoLog.set_startedAt(cursor.getString(2));
                 videoLog.set_endedAt(cursor.getString(3));
-                SimpleDateFormat df = new SimpleDateFormat("d MMM yyyy, HH:mm");
-                Date convertedDate;
-				try {
-					convertedDate = (Date) df.parse(cursor.getString(4));
-					videoLog.set_date(convertedDate);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                               
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String str = cursor.getString(4);
+				videoLog.day = str;
+				//Date d = new Date(cursor.getLong(4));
+				videoLog.set_date(Date.valueOf(str));   
                 VideoLogList.add(videoLog);
             } while (cursor.moveToNext());
             cursor.close(); 

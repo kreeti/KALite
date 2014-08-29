@@ -49,7 +49,11 @@ public class VideoPlayerActivity extends Activity {
 		videoEndedAt = df.format(Calendar.getInstance().getTime());
 		String videoTitle = getIntent().getStringExtra("videoTitle");
 		DatabaseHandler dbHandler = new DatabaseHandler(context);
-		dbHandler.addVideoLog(new VideoLog(videoTitle, videoStartedAt, videoEndedAt, new Date(0)));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	
+		String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
+		Date day = Date.valueOf(currentDateandTime);
+		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day);
+		dbHandler.addVideoLog(vl);
 		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
 		super.onBackPressed();
 		 

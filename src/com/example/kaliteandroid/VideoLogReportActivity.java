@@ -1,13 +1,18 @@
 package com.example.kaliteandroid;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import com.kreeti.kfandroid.DatabaseHandler;
 import com.kreeti.kfmodels.VideoLog;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -19,9 +24,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import au.com.bytecode.opencsv.CSVWriter;
 
 public class VideoLogReportActivity extends Activity {
-	Context context;
+	Context context;	
+	protected Date toDate;
+	protected Date formDate;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -48,11 +56,12 @@ public class VideoLogReportActivity extends Activity {
 	                                        + (monthOfYear + 1) + "-" + year;	                            	
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);		    
 	                    			edittext.setText(date);
+	                    			VideoLogReportActivity.this.formDate = new Date(year, monthOfYear, dayOfMonth);
 	                            }
 
 								
 	                        }, mYear, mMonth, mDay);
-	                dpd.show();
+	                dpd.show();	                
 		        }
 		    });
 		   
@@ -77,6 +86,7 @@ public class VideoLogReportActivity extends Activity {
 	                                        + (monthOfYear + 1) + "-" + year;	                            	
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);		    
 	                    			edittext.setText(date);
+	                    			VideoLogReportActivity.this.toDate = new Date(year, monthOfYear, dayOfMonth);
 	                            }
 
 								
@@ -92,7 +102,15 @@ public class VideoLogReportActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				try {
-					generateCSV();
+					String logFilePath = getIntent().getStringExtra("logFilePath");
+					try {
+						generateCSVFile(logFilePath);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						int i = 0;
+						i ++;
+					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -110,14 +128,27 @@ public class VideoLogReportActivity extends Activity {
 		return true;
 	}
 	
-	public void generateCSV() throws ParseException {
-		DatabaseHandler dbHandler = new DatabaseHandler(context);
-		EditText endDateEditText = (EditText)this.findViewById(R.id.editTextView2);
-		EditText startDateEditText = (EditText)this.findViewById(R.id.editTextView1);
-		SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-		Date startDate = (Date) curFormater.parse(startDateEditText.getText().toString()); 
-		Date endDate = (Date) curFormater.parse(endDateEditText.getText().toString()); 
-		List<VideoLog> videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(startDate, endDate);		
+	public void generateCSVFile(String path) throws ParseException, IOException {
+		DatabaseHandler dbHandler = new DatabaseHandler(context);		 
+		//List<VideoLog> videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(VideoLogReportActivity.this.formDate, VideoLogReportActivity.this.toDate);
+		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
+		String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+		CSVWriter writer = new CSVWriter(new FileWriter(path + "log.csv"));
+		List<String[]> data = new ArrayList<String[]>();
+		for(VideoLog vl : videoLogList){
+			String[] obj = new String[4];
+			obj[0] = vl.get_videoName();
+			obj[1] = vl.get_startedAt();
+			obj[2] = vl.get_endedAt();
+			String s = vl.get_endedAt();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        //String day = sdf.format(vl.get_date());
+			String day = vl.day;
+			obj[3] = day;
+			data.add(obj);
+		}
+		writer.writeAll(data);
+		writer.close();
 	}
 	
 	public void sendMail() {
@@ -126,9 +157,12 @@ public class VideoLogReportActivity extends Activity {
 
 		/* Fill it with Data */
 		emailIntent.setType("plain/text");
-		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"to@email.com"});
-		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject");
-		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
+		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"nbanerjee@kreeti.com"});
+		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Video log");
+		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hi, Please see the attached log");
+		File file   =   new File(getIntent().getStringExtra("logFilePath") + "log.csv");
+		Uri u1  =   Uri.fromFile(file);
+		emailIntent.putExtra(Intent.EXTRA_STREAM, u1);
 
 		/* Send it off to the Activity-Chooser */
 		this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));

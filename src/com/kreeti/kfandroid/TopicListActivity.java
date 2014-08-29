@@ -257,6 +257,7 @@ public class TopicListActivity extends Activity{
 	    switch (item.getItemId()) {
 	        case R.id.report:
 	        	Intent reportIntent = new Intent(TopicListActivity.this, VideoLogReportActivity.class);	
+	        	reportIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
 	        	TopicListActivity.this.startActivity(reportIntent);
 	            return true;	       
 	        default:
