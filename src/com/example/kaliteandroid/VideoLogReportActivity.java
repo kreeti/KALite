@@ -93,8 +93,8 @@ public class VideoLogReportActivity extends Activity {
 		        }
 		    });
 		   
-		   Button sendButton = (Button)this.findViewById(R.id.button1);
-		   sendButton.setOnClickListener(new OnClickListener(){
+		   Button sendPartialLogReportButton = (Button)this.findViewById(R.id.button1);
+		   sendPartialLogReportButton.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -102,13 +102,33 @@ public class VideoLogReportActivity extends Activity {
 				try {
 					String logFilePath = getIntent().getStringExtra("logFilePath");
 					try {
-						generateCSVFile(logFilePath);
+						generateCSVFile(logFilePath, true);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
-						int i = 0;
-						i ++;
+						e.printStackTrace();						
 					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				sendMail();
+			}
+			   
+		   });
+		   
+		   Button sendFullLogreportButton = (Button)this.findViewById(R.id.button2);
+		   sendFullLogreportButton.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				try {
+					String logFilePath = getIntent().getStringExtra("logFilePath");
+					try {
+						generateCSVFile(logFilePath, false);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+											}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -126,14 +146,17 @@ public class VideoLogReportActivity extends Activity {
 		return true;
 	}
 	
-	public void generateCSVFile(String path) throws ParseException, IOException {
+	public void generateCSVFile(String path, boolean isPartialLog) throws ParseException, IOException {
 		DatabaseHandler dbHandler = new DatabaseHandler(context);
 		EditText edittext2 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);
 		String toDate = edittext2.getText().toString();
 		EditText edittext1 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);
 		String fromDate = edittext1.getText().toString();
-		List<VideoLog> videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(Date.valueOf(fromDate), Date.valueOf(toDate));
-		//List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
+		List<VideoLog> videoLogList;
+		if(isPartialLog)
+			videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(Date.valueOf(fromDate), Date.valueOf(toDate));
+		else
+			videoLogList = dbHandler.getAllVideoLogs();
 		String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
 		CSVWriter writer = new CSVWriter(new FileWriter(path + "log.csv"));
 		List<String[]> data = new ArrayList<String[]>();

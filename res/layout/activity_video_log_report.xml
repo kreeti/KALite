@@ -25,16 +25,22 @@
         android:ems="10"
         android:inputType="date"/>
     
-
     <Button
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="15dp"
         android:text="@string/send_report" />
 
-   
+	<Button
+	    android:id="@+id/button2"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="8dp"
+	    android:layout_marginRight="8dp"
+	    android:layout_marginTop="15dp"
+	    android:text="@string/send_complete_report" />
 
 </LinearLayout>
