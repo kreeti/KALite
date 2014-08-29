@@ -10,13 +10,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 import org.json.JSONException;
-
 import com.example.kaliteandroid.R;
 import com.example.kaliteandroid.VideoLogReportActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -27,7 +24,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -269,47 +265,17 @@ public class TopicListActivity extends Activity{
 	}
 	
   public void authenticateUserFromAlertDialog() {
-	// get prompts.xml view
-	  	
-	                  LayoutInflater layoutInflater = LayoutInflater.from(context);
-	  
-	   
-	  
-	                  View promptView = layoutInflater.inflate(R.layout.prompts_layout, null);
-	  
-	   
-	  
-	                  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-	  
-	   
-	  
-	                  // set prompts.xml to be the layout file of the alertdialog builder
-	  
-	                  alertDialogBuilder.setView(promptView);
-	  
-	   
-	  
-	               final EditText input = (EditText) promptView.findViewById(R.id.userInput);
-	  
-	   
-	  
-	                  // setup a dialog window
-	  
-	                  alertDialogBuilder
-	  
-	                          .setCancelable(false)
-	  
-	                          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-	  
-	                                      public void onClick(DialogInterface dialog, int id) {
-	  
-	                                          // get user input and set it to result
-	  
-	                                  //        editTextMainScreen.setText(input.getText());
+	  LayoutInflater layoutInflater = LayoutInflater.from(context); 
+	  View promptView = layoutInflater.inflate(R.layout.prompts_layout, null);
+	  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+	  alertDialogBuilder.setView(promptView);
+	  final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+	  alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {	  
+	                                      public void onClick(DialogInterface dialog, int id) {	
 	                                    	  String resetPassword = input.getText().toString();
 	                                    	  if(resetPassword.equals("password")) {
 	                          	        		context.deleteDatabase(DATABASE_NAME);
-	                          	        	}else{
+	                          	        	}else {
 	                          	        		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 	                          	        		alertDialog.setTitle("Password is wrong");
 	                          	        		alertDialog.setMessage("Try again later!");
@@ -337,22 +303,9 @@ public class TopicListActivity extends Activity{
 	                                      }
 	  
 	                                  });
-	  
-	   
-	  
 	                  // create an alert dialog
 	  
 	                AlertDialog alertD = alertDialogBuilder.create();
-	  
-	   
-	  
-	                  alertD.show();
-	  
-	   
-	  
+	                alertD.show();
 	              }
-	  
-	          
-  
-	         
 }
