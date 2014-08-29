@@ -9,7 +9,6 @@ public class VideoLog {
    private String _startedAt;
    private String _endedAt;
    private Date _date;
-   public String day;
      
     // Empty constructor
     public VideoLog(String videoTitle, String videoStartedAt, String videoEndedAt, Date l){

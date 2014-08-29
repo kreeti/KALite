@@ -83,10 +83,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date convertedDate = null;
 				String str = cursor.getString(4);
-				videoLog.day = str;
-				//Date d = new Date(cursor.getLong(4));
-				videoLog.set_date(Date.valueOf(str));
-                               
+				//videoLog.day = str;				
+				videoLog.set_date(Date.valueOf(str));                               
                 VideoLogList.add(videoLog);
             } while (cursor.moveToNext());
             cursor.close(); 
@@ -112,8 +110,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 videoLog.set_endedAt(cursor.getString(3));
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 String str = cursor.getString(4);
-				videoLog.day = str;
-				//Date d = new Date(cursor.getLong(4));
+				//videoLog.day = str;				
 				videoLog.set_date(Date.valueOf(str));   
                 VideoLogList.add(videoLog);
             } while (cursor.moveToNext());

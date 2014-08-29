@@ -8,10 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import com.kreeti.kfandroid.DatabaseHandler;
 import com.kreeti.kfmodels.VideoLog;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -141,9 +139,8 @@ public class VideoLogReportActivity extends Activity {
 			obj[1] = vl.get_startedAt();
 			obj[2] = vl.get_endedAt();
 			String s = vl.get_endedAt();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	        //String day = sdf.format(vl.get_date());
-			String day = vl.day;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        String day = sdf.format(vl.get_date());			
 			obj[3] = day;
 			data.add(obj);
 		}
