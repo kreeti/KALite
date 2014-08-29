@@ -11,7 +11,8 @@
         android:text="@string/start_date"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:ems="10"
-        android:inputType="date" >  
+        android:inputType="date"
+        android:editable="false" >  
              <requestFocus />
     </EditText>
 
@@ -23,7 +24,8 @@
         android:text="@string/end_date"
         android:textAppearance="?android:attr/textAppearanceLarge" 
         android:ems="10"
-        android:inputType="date"/>
+        android:inputType="date"
+        android:editable="false"/>
     
     <Button
         android:id="@+id/button1"

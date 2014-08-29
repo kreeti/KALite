@@ -1,5 +1,9 @@
 package com.example.kaliteandroid;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
@@ -8,14 +12,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 import com.kreeti.kfandroid.DatabaseHandler;
 import com.kreeti.kfmodels.VideoLog;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +36,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 public class VideoLogReportActivity extends Activity {
 	Context context;	
 	protected Date toDate;
-	protected Date formDate;
+	protected Date fromDate;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -54,7 +63,7 @@ public class VideoLogReportActivity extends Activity {
 	                            	String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);		    
 	                    			edittext.setText(date);
-	                    			VideoLogReportActivity.this.formDate = new Date(year, monthOfYear, dayOfMonth);
+	                    			VideoLogReportActivity.this.fromDate = new Date(year, monthOfYear, dayOfMonth);
 	                            }
 
 								
@@ -99,6 +108,7 @@ public class VideoLogReportActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				if(toDate == null || fromDate == null) return;
 				try {
 					String logFilePath = getIntent().getStringExtra("logFilePath");
 					try {
@@ -183,13 +193,91 @@ public class VideoLogReportActivity extends Activity {
 		emailIntent.setType("plain/text");
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"nbanerjee@kreeti.com"});
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Video log");
-		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hi, Please see the attached log");
-		File file   =   new File(getIntent().getStringExtra("logFilePath") + "log.csv");
+		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hi, Please see the attached log");	
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");		
+	    String currentDateandTime = sdf.format(Calendar.getInstance().getTime());	    
+		String zipFilePath = getIntent().getStringExtra("logFilePath") + currentDateandTime + "-log.zip";
+		zipFileAtPath(getIntent().getStringExtra("logFilePath") + "log.csv", zipFilePath);
+		File file   =   new File(zipFilePath);
 		Uri u1  =   Uri.fromFile(file);
 		emailIntent.putExtra(Intent.EXTRA_STREAM, u1);
 
 		/* Send it off to the Activity-Chooser */
 		this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+	}
+	
+	public boolean zipFileAtPath(String sourcePath, String toLocation) {
+	    // ArrayList<String> contentList = new ArrayList<String>();
+	    final int BUFFER = 2048;
+
+
+	    File sourceFile = new File(sourcePath);
+	    try {
+	        BufferedInputStream origin = null;
+	        FileOutputStream dest = new FileOutputStream(toLocation);
+	        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+	                dest));
+	        if (sourceFile.isDirectory()) {
+	            zipSubFolder(out, sourceFile, sourceFile.getParent().length());
+	        } else {
+	            byte data[] = new byte[BUFFER];
+	            FileInputStream fi = new FileInputStream(sourcePath);
+	            origin = new BufferedInputStream(fi, BUFFER);
+	            ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
+	            out.putNextEntry(entry);
+	            int count;
+	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+	                out.write(data, 0, count);
+	            }
+	        }
+	        out.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	    return true;
+	}
+	
+	private void zipSubFolder(ZipOutputStream out, File folder,
+	        int basePathLength) throws IOException {
+
+	    final int BUFFER = 2048;
+
+	    File[] fileList = folder.listFiles();
+	    BufferedInputStream origin = null;
+	    for (File file : fileList) {
+	        if (file.isDirectory()) {
+	            zipSubFolder(out, file, basePathLength);
+	        } else {
+	            byte data[] = new byte[BUFFER];
+	            String unmodifiedFilePath = file.getPath();
+	            String relativePath = unmodifiedFilePath
+	                    .substring(basePathLength);
+	            Log.i("ZIP SUBFOLDER", "Relative Path : " + relativePath);
+	            FileInputStream fi = new FileInputStream(unmodifiedFilePath);
+	            origin = new BufferedInputStream(fi, BUFFER);
+	            ZipEntry entry = new ZipEntry(relativePath);
+	            out.putNextEntry(entry);
+	            int count;
+	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+	                out.write(data, 0, count);
+	            }
+	            origin.close();
+	        }
+	    }
+	}
+
+	/*
+	 * gets the last path component
+	 * 
+	 * Example: getLastPathComponent("downloads/example/fileToZip");
+	 * Result: "fileToZip"
+	 */
+	public String getLastPathComponent(String filePath) {
+	    String[] segments = filePath.split("/");
+	    String lastPathComponent = segments[segments.length - 1];
+	    return lastPathComponent;
 	}
 	
 }
