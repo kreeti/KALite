@@ -50,8 +50,8 @@ public class VideoLogReportActivity extends Activity {
 	                            @Override
 	                            public void onDateSet(DatePicker view, int year,
 	                                    int monthOfYear, int dayOfMonth) {	                               
-	                            	String date = dayOfMonth + "-"
-	                                        + (monthOfYear + 1) + "-" + year;	                            	
+	                            	//String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;	     
+	                            	String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);		    
 	                    			edittext.setText(date);
 	                    			VideoLogReportActivity.this.formDate = new Date(year, monthOfYear, dayOfMonth);
@@ -80,8 +80,8 @@ public class VideoLogReportActivity extends Activity {
 	                            @Override
 	                            public void onDateSet(DatePicker view, int year,
 	                                    int monthOfYear, int dayOfMonth) {	                               
-	                            	String date = dayOfMonth + "-"
-	                                        + (monthOfYear + 1) + "-" + year;	                            	
+	                            	//String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;	
+	                            	String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);		    
 	                    			edittext.setText(date);
 	                    			VideoLogReportActivity.this.toDate = new Date(year, monthOfYear, dayOfMonth);
@@ -127,9 +127,13 @@ public class VideoLogReportActivity extends Activity {
 	}
 	
 	public void generateCSVFile(String path) throws ParseException, IOException {
-		DatabaseHandler dbHandler = new DatabaseHandler(context);		 
-		//List<VideoLog> videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(VideoLogReportActivity.this.formDate, VideoLogReportActivity.this.toDate);
-		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
+		DatabaseHandler dbHandler = new DatabaseHandler(context);
+		EditText edittext2 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);
+		String toDate = edittext2.getText().toString();
+		EditText edittext1 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);
+		String fromDate = edittext1.getText().toString();
+		List<VideoLog> videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(Date.valueOf(fromDate), Date.valueOf(toDate));
+		//List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
 		String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
 		CSVWriter writer = new CSVWriter(new FileWriter(path + "log.csv"));
 		List<String[]> data = new ArrayList<String[]>();

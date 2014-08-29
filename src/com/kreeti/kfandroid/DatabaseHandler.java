@@ -98,7 +98,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fDate = sdf.format(fromDate);
         String tDate = sdf.format(toDate);
-        String selectQuery = "SELECT * FROM " + TABLE_LOGS + "WHERE" + KEY_DATE + "BETWEEN" + fDate + "AND" + tDate;     
+        String selectQuery = "SELECT * FROM " + TABLE_LOGS + " WHERE " + KEY_DATE + " BETWEEN date('"+fDate+"') AND date('"+tDate+"')";     
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);  
                 
