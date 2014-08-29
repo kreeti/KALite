@@ -9,11 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 import org.json.JSONException;
 
@@ -22,23 +18,24 @@ import com.example.kaliteandroid.VideoLogReportActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -50,6 +47,8 @@ public class TopicListActivity extends Activity{
     private static final String TAG = "FileChooserActivity";
     private String fileDirectoryVideoPath;
     public ProgressDialog dialog;
+    Context context;
+    private static final String DATABASE_NAME = "logsManager";    
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,8 @@ public class TopicListActivity extends Activity{
 		super.onCreate(savedInstanceState);	
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		
        // String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
-		setContentView(R.layout.activity_child);    		
+		setContentView(R.layout.activity_child);    	
+		context = this;
     	dialog = ProgressDialog.show(this, "", "Loading...");
     	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
 		String fileDirectoryJSONFilePath = settings.getString("IndexFilePath", "").toString();
@@ -259,9 +259,100 @@ public class TopicListActivity extends Activity{
 	        	Intent reportIntent = new Intent(TopicListActivity.this, VideoLogReportActivity.class);	
 	        	reportIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
 	        	TopicListActivity.this.startActivity(reportIntent);
-	            return true;	       
+	            return true;	            
+	        case R.id.resetLog:
+	        	authenticateUserFromAlertDialog();	        	
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+  public void authenticateUserFromAlertDialog() {
+	// get prompts.xml view
+	  	
+	                  LayoutInflater layoutInflater = LayoutInflater.from(context);
+	  
+	   
+	  
+	                  View promptView = layoutInflater.inflate(R.layout.prompts_layout, null);
+	  
+	   
+	  
+	                  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+	  
+	   
+	  
+	                  // set prompts.xml to be the layout file of the alertdialog builder
+	  
+	                  alertDialogBuilder.setView(promptView);
+	  
+	   
+	  
+	               final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+	  
+	   
+	  
+	                  // setup a dialog window
+	  
+	                  alertDialogBuilder
+	  
+	                          .setCancelable(false)
+	  
+	                          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+	  
+	                                      public void onClick(DialogInterface dialog, int id) {
+	  
+	                                          // get user input and set it to result
+	  
+	                                  //        editTextMainScreen.setText(input.getText());
+	                                    	  String resetPassword = input.getText().toString();
+	                                    	  if(resetPassword.equals("password")) {
+	                          	        		context.deleteDatabase(DATABASE_NAME);
+	                          	        	}else{
+	                          	        		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+	                          	        		alertDialog.setTitle("Password is wrong");
+	                          	        		alertDialog.setMessage("Try again later!");
+	                          	        		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+	                          	        		   public void onClick(DialogInterface dialog, int which) {
+	                          	        		      // TODO Add your code for the button here.
+	                          	        		   }
+	                          	        		});                       	        		
+	                          	        		
+	                          	        		alertDialog.show();
+	                          	        	}
+	  
+	                                      }
+	  
+	                                  })
+	  
+	                          .setNegativeButton("Cancel",
+	  
+	                                  new DialogInterface.OnClickListener() {
+	  
+	                                      public void onClick(DialogInterface dialog, int id) {
+	  
+	                                          dialog.cancel();
+	  
+	                                      }
+	  
+	                                  });
+	  
+	   
+	  
+	                  // create an alert dialog
+	  
+	                AlertDialog alertD = alertDialogBuilder.create();
+	  
+	   
+	  
+	                  alertD.show();
+	  
+	   
+	  
+	              }
+	  
+	          
+  
+	         
 }

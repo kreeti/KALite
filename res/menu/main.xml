@@ -1,4 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/report" android:title="Report" android:showAsAction="withText"></item>
+    <item android:id="@+id/resetLog" android:title="Reset Log" android:showAsAction="withText"></item>
 
 </menu>

@@ -11,5 +11,6 @@
     <string name="send_report">Send Partial Log Report</string>
     <string name="end_date">End date</string>
     <string name="send_complete_report">Send Full Log Report</string>
+    <string name="enter_password">Please enter admin password...</string>
 
 </resources>

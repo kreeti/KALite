@@ -16,6 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.kreeti.kfandroid.DatabaseHandler;
+import com.kreeti.kfandroid.TopicListActivity;
 import com.kreeti.kfmodels.VideoLog;
 
 import android.net.Uri;
@@ -26,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,6 +39,7 @@ public class VideoLogReportActivity extends Activity {
 	Context context;	
 	protected Date toDate;
 	protected Date fromDate;
+	private static final String DATABASE_NAME = "logsManager";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -152,8 +155,26 @@ public class VideoLogReportActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.video_log_report, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.report:
+	        	Intent reportIntent = new Intent(VideoLogReportActivity.this, VideoLogReportActivity.class);	
+	        	reportIntent.putExtra("logFilePath", getIntent().getStringExtra("logFilePath"));
+	        	VideoLogReportActivity.this.startActivity(reportIntent);
+	        	finish();
+	            return true;	
+	        case R.id.resetLog:
+	        	context.deleteDatabase(DATABASE_NAME);
+	        	return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	public void generateCSVFile(String path, boolean isPartialLog) throws ParseException, IOException {

@@ -115,7 +115,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 VideoLogList.add(videoLog);
             } while (cursor.moveToNext());
             cursor.close(); 
-        }     
+        }  
         
         return VideoLogList;
     }
