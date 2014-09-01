@@ -1,13 +1,9 @@
 package com.kreeti.kfandroid;
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
 import com.kreeti.kfmodels.VideoLog;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,17 +11,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseHandler extends SQLiteOpenHelper{	
-    private static final int DATABASE_VERSION = 3;   
-    private static final String DATABASE_NAME = "logsManager";    
-    private static final String TABLE_LOGS = "videologs";    
-    private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "videoName";
-    private static final String KEY_STARTED_AT = "startedAt";
-    private static final String KEY_ENDED_AT = "endedAt";
-    private static final String KEY_DATE = "day";
+public class DatabaseHandler extends SQLiteOpenHelper implements Constants{ 
  
-    public DatabaseHandler(Context context) {
+    public DatabaseHandler(Context context) {    
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
     } 

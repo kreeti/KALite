@@ -55,10 +55,8 @@ public class VideoPlayerActivity extends Activity {
 		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day);
 		dbHandler.addVideoLog(vl);
 		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
-		super.onBackPressed();
-		 
+		super.onBackPressed();		 
      } 
-	
 	
 	@Override 
 	protected void onSaveInstanceState(Bundle icicle) {	      

@@ -19,11 +19,15 @@ import com.kreeti.kfandroid.DatabaseHandler;
 import com.kreeti.kfandroid.TopicListActivity;
 import com.kreeti.kfmodels.VideoLog;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -38,12 +42,12 @@ import au.com.bytecode.opencsv.CSVWriter;
 public class VideoLogReportActivity extends Activity {
 	Context context;	
 	protected Date toDate;
-	protected Date fromDate;
-	private static final String DATABASE_NAME = "logsManager";
+	protected Date fromDate;	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		context = this;
+		setTitle("Log" + " - Kreeti Foundation");
 		setContentView(R.layout.activity_video_log_report);
 		EditText startDateEditText = (EditText)this.findViewById(R.id.editTextView1);
 		startDateEditText.setOnClickListener(new OnClickListener() {
@@ -109,19 +113,20 @@ public class VideoLogReportActivity extends Activity {
 		   sendPartialLogReportButton.setOnClickListener(new OnClickListener(){
 
 			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
+			public void onClick(View v) {				
 				if(toDate == null || fromDate == null) return;
+				else if(!toDate.after(fromDate)){
+					showAlert("End date should be after Start date!");
+					return;				
+				}
 				try {
 					String logFilePath = getIntent().getStringExtra("logFilePath");
 					try {
 						generateCSVFile(logFilePath, true);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+					} catch (IOException e) {						
 						e.printStackTrace();						
 					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+				} catch (ParseException e) {					
 					e.printStackTrace();
 				}
 				sendMail();
@@ -133,48 +138,21 @@ public class VideoLogReportActivity extends Activity {
 		   sendFullLogreportButton.setOnClickListener(new OnClickListener(){
 
 			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
+			public void onClick(View v) {				
 				try {
 					String logFilePath = getIntent().getStringExtra("logFilePath");
 					try {
 						generateCSVFile(logFilePath, false);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-											}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} catch (ParseException e) {					
 					e.printStackTrace();
 				}
 				sendMail();
 			}
 			   
 		   });
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	        case R.id.report:
-	        	Intent reportIntent = new Intent(VideoLogReportActivity.this, VideoLogReportActivity.class);	
-	        	reportIntent.putExtra("logFilePath", getIntent().getStringExtra("logFilePath"));
-	        	VideoLogReportActivity.this.startActivity(reportIntent);
-	        	finish();
-	            return true;	
-	        case R.id.resetLog:
-	        	context.deleteDatabase(DATABASE_NAME);
-	        	return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
 	}
 	
 	public void generateCSVFile(String path, boolean isPartialLog) throws ParseException, IOException {
@@ -207,7 +185,10 @@ public class VideoLogReportActivity extends Activity {
 	}
 	
 	public void sendMail() {
-		/* Create the Intent */
+		if(!isNetworkConnected()){
+			showAlert("Please connect your device with internate!");
+			return;
+		}
 		final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 
 		/* Fill it with Data */
@@ -228,11 +209,8 @@ public class VideoLogReportActivity extends Activity {
 		this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
 	}
 	
-	public boolean zipFileAtPath(String sourcePath, String toLocation) {
-	    // ArrayList<String> contentList = new ArrayList<String>();
+	public boolean zipFileAtPath(String sourcePath, String toLocation) {	   
 	    final int BUFFER = 2048;
-
-
 	    File sourceFile = new File(sourcePath);
 	    try {
 	        BufferedInputStream origin = null;
@@ -300,5 +278,27 @@ public class VideoLogReportActivity extends Activity {
 	    String lastPathComponent = segments[segments.length - 1];
 	    return lastPathComponent;
 	}
+	
+	public void showAlert(String message){
+		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setTitle("Error!");
+		alertDialog.setMessage(message);
+		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+		   public void onClick(DialogInterface dialog, int which) {
+		      // TODO Add your code for the button here.
+		   }
+		});
+		alertDialog.show();
+	}
+	
+	private boolean isNetworkConnected() {
+		  ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		  NetworkInfo ni = cm.getActiveNetworkInfo();
+		  if (ni == null) {
+		   // There are no active networks.
+		   return false;
+		  } else
+		   return true;
+		 }
 	
 }

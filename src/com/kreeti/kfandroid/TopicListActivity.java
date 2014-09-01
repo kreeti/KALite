@@ -36,22 +36,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TopicListActivity extends Activity{		
+public class TopicListActivity extends Activity implements Constants{		
 	VideoModelNode rootNode;
-    VideoModelNode currentNode;    
-    private static final int REQUEST_CODE = 6384;
-    private static final String TAG = "FileChooserActivity";
+    VideoModelNode currentNode;
     private String fileDirectoryVideoPath;
     public ProgressDialog dialog;
-    Context context;
-    private static final String DATABASE_NAME = "logsManager";    
-	
+    Context context;  
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);	
-		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		
-       // String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_child);    	
 		context = this;
     	dialog = ProgressDialog.show(this, "", "Loading...");
@@ -127,9 +122,8 @@ public class TopicListActivity extends Activity{
 		} catch (JSONException e) {			
 			e.printStackTrace();
 		}	
+		setListAdapter();
 
-		setListAdapter();		
-			
 	}	 
 		 
 	private VideoModelNode parseNode(JsonReader jsonReader, VideoModelNode parent) throws JSONException, IOException {
@@ -272,39 +266,27 @@ public class TopicListActivity extends Activity{
 	  final EditText input = (EditText) promptView.findViewById(R.id.userInput);
 	  alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {	  
 	                                      public void onClick(DialogInterface dialog, int id) {	
-	                                    	  String resetPassword = input.getText().toString();
-	                                    	  if(resetPassword.equals("password")) {
+	                                    	  String resetPassword = input.getText().toString();	                                    	  
+	                                    	  if(resetPassword.equals(ADMIN_LOGRESET_PASSWORRD)) {
 	                          	        		context.deleteDatabase(DATABASE_NAME);
-	                          	        	}else {
-	                          	        		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-	                          	        		alertDialog.setTitle("Password is wrong");
-	                          	        		alertDialog.setMessage("Try again later!");
-	                          	        		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-	                          	        		   public void onClick(DialogInterface dialog, int which) {
+	                          	        		}else {
+	                          	        			AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+	                          	        			alertDialog.setTitle("Password is wrong");
+	                          	        			alertDialog.setMessage("Try again later!");
+	                          	        			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+	                          	        				public void onClick(DialogInterface dialog, int which) {
 	                          	        		      // TODO Add your code for the button here.
-	                          	        		   }
-	                          	        		});                       	        		
-	                          	        		
+	                          	        				}
+	                          	        			});
 	                          	        		alertDialog.show();
-	                          	        	}
-	  
-	                                      }
-	  
-	                                  })
-	  
-	                          .setNegativeButton("Cancel",
-	  
-	                                  new DialogInterface.OnClickListener() {
-	  
-	                                      public void onClick(DialogInterface dialog, int id) {
-	  
-	                                          dialog.cancel();
-	  
-	                                      }
-	  
-	                                  });
+	                          	        		}
+	                                      	}
+	                                  	}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                                  			public void onClick(DialogInterface dialog, int id) {
+	                                  				dialog.cancel();
+	                                  				}
+	                                 });
 	                  // create an alert dialog
-	  
 	                AlertDialog alertD = alertDialogBuilder.create();
 	                alertD.show();
 	              }
