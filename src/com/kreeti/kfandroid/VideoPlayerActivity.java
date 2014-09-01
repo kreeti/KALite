@@ -7,21 +7,15 @@ package com.kreeti.kfandroid;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
-
 import com.example.kaliteandroid.R;
 import com.kreeti.kfmodels.VideoLog;
-
-import android.app.Activity;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-public class VideoPlayerActivity extends Activity {
+public class VideoPlayerActivity extends BaseActivity {
 	private String videoStartedAt;
 	private String videoEndedAt;
 	Context context;
@@ -38,23 +32,22 @@ public class VideoPlayerActivity extends Activity {
 		VideoView videoView = (VideoView) findViewById(R.id.videoView1);
 		videoView.setVideoURI(vidFile);
 		videoView.setMediaController(new MediaController(this));
-		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat df = new SimpleDateFormat(TIME_FORMAT);
 		videoStartedAt = df.format(Calendar.getInstance().getTime());
 		videoView.start();
 	}	
 	
 	@Override 
     public void onBackPressed() { 
-		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat df = new SimpleDateFormat(TIME_FORMAT);
 		videoEndedAt = df.format(Calendar.getInstance().getTime());
 		String videoTitle = getIntent().getStringExtra("videoTitle");
 		DatabaseHandler dbHandler = new DatabaseHandler(context);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);	
 		String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
 		Date day = Date.valueOf(currentDateandTime);
 		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day);
-		dbHandler.addVideoLog(vl);
-		List<VideoLog> videoLogList = dbHandler.getAllVideoLogs();
+		dbHandler.addVideoLog(vl);		
 		super.onBackPressed();		 
      } 
 	

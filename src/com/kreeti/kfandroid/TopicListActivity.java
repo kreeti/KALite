@@ -1,5 +1,6 @@
 /*
  *	Created by Nabarun Banerjee on 11/07/14.
+
  *  Copyright (c) 2014 Kreeti Technologies. All rights reserved.
  */
 package com.kreeti.kfandroid;
@@ -14,7 +15,6 @@ import org.json.JSONException;
 import com.example.kaliteandroid.R;
 import com.example.kaliteandroid.VideoLogReportActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -36,7 +36,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TopicListActivity extends Activity implements Constants{		
+public class TopicListActivity extends BaseActivity{		
 	VideoModelNode rootNode;
     VideoModelNode currentNode;
     private String fileDirectoryVideoPath;
@@ -53,7 +53,7 @@ public class TopicListActivity extends Activity implements Constants{
     	SharedPreferences settings = getSharedPreferences("BasicInfo", 0);
 		String fileDirectoryJSONFilePath = settings.getString("IndexFilePath", "").toString();
 		if(fileDirectoryJSONFilePath.isEmpty() || fileDirectoryJSONFilePath == null)
-			showChooser("Choose a JSON file");
+			showChooser(CHOOSER_MESSAGE);
 		else{
 			try {
 				createJsonFromFile(fileDirectoryJSONFilePath);
@@ -70,7 +70,7 @@ public class TopicListActivity extends Activity implements Constants{
 		    	if(currentNode.children.size() > 0) {	
 		    		VideoModelNode j = currentNode.children.get(pos);
 		    		if(!j.isVideo)
-		    			setTitle(j.title + " - Kreeti Foundation");
+		    			setTitle(j.title + KFTITLE_MESSAGE);
 		    		if(j.children != null) {
 		    			currentNode = j;
 		    			
@@ -81,22 +81,18 @@ public class TopicListActivity extends Activity implements Constants{
 		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(TopicListActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());				    		 
-				    		videoPlayerIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
+				    		videoPlayerIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace(VIDEOS_SUBDIR_PATH, ""));
 				    		videoPlayerIntent.putExtra("videoTitle", j.title);
 				    		
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
 		            	}
 		    		}else{
-	            		setTitle(j.parent.title + " - Kreeti Foundation");
-	            	}	    			
-		    		 	
-		    	}	
-		    			    	
+	            		setTitle(j.parent.title + KFTITLE_MESSAGE);
+	            	}	
+		    	}		    	
 		    }
-		});	
-				
+		});		
 	}
-
 	
 	@Override 
     public void onBackPressed() { 		
@@ -104,7 +100,7 @@ public class TopicListActivity extends Activity implements Constants{
 			super.onBackPressed();		 	
 		 } else {
 			 currentNode = currentNode.parent;
-			 setTitle(currentNode.title + " - Kreeti Foundation");
+			 setTitle(currentNode.title + KFTITLE_MESSAGE);
 			 setListAdapter();
 		 }
     } 
@@ -123,7 +119,6 @@ public class TopicListActivity extends Activity implements Constants{
 			e.printStackTrace();
 		}	
 		setListAdapter();
-
 	}	 
 		 
 	private VideoModelNode parseNode(JsonReader jsonReader, VideoModelNode parent) throws JSONException, IOException {
@@ -165,7 +160,7 @@ public class TopicListActivity extends Activity implements Constants{
 		        try {
 		            startActivityForResult(intent, REQUEST_CODE);
 		        } catch (ActivityNotFoundException e) {
-		            
+		        	e.printStackTrace();
 		        }
 		    }
 
@@ -204,14 +199,14 @@ public class TopicListActivity extends Activity implements Constants{
 
 			        super.onActivityResult(requestCode, resultCode, data);
 			    } else {
-			    	showChooser("Choose a JSON file");
+			    	showChooser(CHOOSER_MESSAGE);
 			    }
 		}	  	    
 
 	public void createJsonFromFile(String path) throws IOException {
 		    	File selectedFile = new File(path);
 		    	if(!selectedFile.exists())
-		    		showChooser("Choose a JSON file");
+		    		showChooser(CHOOSER_MESSAGE);
 		    	
 		    	InputStream inStream = new FileInputStream(selectedFile);		    	 
 		        BufferedInputStream bufferedStream = new BufferedInputStream(inStream);
@@ -219,7 +214,7 @@ public class TopicListActivity extends Activity implements Constants{
 		        JsonReader reader = new JsonReader(streamReader);  
 		    	parseJSON(reader);
 
-				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + "videos/";
+				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + VIDEOS_SUBDIR_PATH;
 				 if(dialog != null) {
 		   		 dialog.dismiss();
 		   		 dialog = null;
@@ -247,7 +242,7 @@ public class TopicListActivity extends Activity implements Constants{
 	    switch (item.getItemId()) {
 	        case R.id.report:
 	        	Intent reportIntent = new Intent(TopicListActivity.this, VideoLogReportActivity.class);	
-	        	reportIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
+	        	reportIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace(VIDEOS_SUBDIR_PATH, ""));
 	        	TopicListActivity.this.startActivity(reportIntent);
 	            return true;	            
 	        case R.id.resetLog:
@@ -270,15 +265,7 @@ public class TopicListActivity extends Activity implements Constants{
 	                                    	  if(resetPassword.equals(ADMIN_LOGRESET_PASSWORRD)) {
 	                          	        		context.deleteDatabase(DATABASE_NAME);
 	                          	        		}else {
-	                          	        			AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-	                          	        			alertDialog.setTitle("Password is wrong");
-	                          	        			alertDialog.setMessage("Try again later!");
-	                          	        			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-	                          	        				public void onClick(DialogInterface dialog, int which) {
-	                          	        		      // TODO Add your code for the button here.
-	                          	        				}
-	                          	        			});
-	                          	        		alertDialog.show();
+	                          	        			showAlert(ERROR_MESSAGE_PASSWORD);	                          	        			
 	                          	        		}
 	                                      	}
 	                                  	}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -290,4 +277,5 @@ public class TopicListActivity extends Activity implements Constants{
 	                AlertDialog alertD = alertDialogBuilder.create();
 	                alertD.show();
 	              }
+
 }
