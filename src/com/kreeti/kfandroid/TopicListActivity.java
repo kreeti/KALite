@@ -91,6 +91,7 @@ public class TopicListActivity extends BaseActivity{
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());				    		 
 				    		videoPlayerIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
 				    		videoPlayerIntent.putExtra("videoTitle", j.title);
+				    		videoPlayerIntent.putExtra("videoId", j.id);
 				    		
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
 		            	}

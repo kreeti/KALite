@@ -52,15 +52,7 @@ public class VideoLogReportActivity extends BaseActivity {
 	                                    int monthOfYear, int dayOfMonth) {		     
 	                            	String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);		    
-	                    			edittext.setText(date);
-	                    			Calendar cal = Calendar.getInstance();
-	                    		    cal.set(Calendar.YEAR, year);
-	                    		    cal.set(Calendar.MONTH, monthOfYear);
-	                    		    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);	  
-	                    		    cal.set(Calendar.HOUR_OF_DAY, 0);
-	                    	        cal.set(Calendar.MINUTE, 0);
-	                    	        cal.set(Calendar.SECOND, 0);
-	                    	        cal.set(Calendar.MILLISECOND, 0);
+	                    			edittext.setText(date);	                    			
 	                    		    VideoLogReportActivity.this.fromDate = Date.valueOf(date);	                    		  
 	                            }
 
@@ -144,11 +136,7 @@ public class VideoLogReportActivity extends BaseActivity {
 	}
 	
 	public void generateCSVFile(String path, boolean isPartialLog) throws ParseException, IOException {
-		DatabaseHandler dbHandler = new DatabaseHandler(context);
-		EditText edittext2 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);
-		//String toDate = edittext2.getText().toString();
-		EditText edittext1 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);
-		//String fromDate = edittext1.getText().toString();
+		DatabaseHandler dbHandler = new DatabaseHandler(context);		
 		List<VideoLog> videoLogList;
 		if(isPartialLog)
 			videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(fromDate, toDate);
@@ -157,15 +145,13 @@ public class VideoLogReportActivity extends BaseActivity {
 		CSVWriter writer = new CSVWriter(new FileWriter(path + "log.csv"));
 		List<String[]> data = new ArrayList<String[]>();
 		for(VideoLog vl : videoLogList){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			//Date d = vl.startedAt();
-			String s = sdf.format(vl.startedAt());
-			String[] obj = new String[4];
-			obj[0] = vl.videoName();
-			obj[1] = sdf.format(vl.startedAt());
-			obj[2] = sdf.format(vl.endedAt());
-			obj[3] = sdf.format(vl.createdAt());
-			//obj[4] = vl.videoId();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");			
+			String[] obj = new String[5];
+			obj[0] = vl.id();
+			obj[1] = vl.videoName();
+			obj[2] = sdf.format(vl.startedAt());
+			obj[3] = sdf.format(vl.endedAt());			
+			obj[4] = vl.videoId();
 			data.add(obj);
 		}
 		writer.writeAll(data);

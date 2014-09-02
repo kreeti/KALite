@@ -68,27 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
         Cursor cursor = db.rawQuery(selectQuery, null);  
                 
         if (cursor != null && cursor.moveToFirst()) {
-            do {
-               /* VideoLog videoLog = new VideoLog();
-                String s = cursor.getString(1);
-                s = cursor.getString(2);
-                s = cursor.getString(3);
-                java.util.Date d = new Date(cursor.getLong(2));
-                
-                SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                try {
-                	videoLog.setstartedAt(iso8601Format.parse(cursor.getString(2)));
-                    videoLog.setendedAt(iso8601Format.parse(cursor.getString(3)));               				
-    				videoLog.setcreatedAt(iso8601Format.parse(cursor.getString(4)));
-    				d = iso8601Format.parse(cursor.getString(2));
-                } catch (java.text.ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}                
-                videoLog.setvideoName(cursor.getString(1));
-                
-				videoLog.setVideoId(cursor.getString(5));  
-                VideoLogList.add(videoLog);*/
+            do {               
             	VideoLogList.add(createLog(cursor));
             } while (cursor.moveToNext());
             cursor.close(); 
@@ -117,24 +97,18 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
     }
     
     private VideoLog createLog(Cursor cursor) {
-    	VideoLog videoLog = new VideoLog();
-        String s = cursor.getString(1);
-        s = cursor.getString(2);
-        s = cursor.getString(3);
-        java.util.Date d = new Date(cursor.getLong(2));
-        
+    	VideoLog videoLog = new VideoLog();    	
+        videoLog.setid(cursor.getString(0));
+        videoLog.setvideoName(cursor.getString(1));
         SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
         	videoLog.setstartedAt(iso8601Format.parse(cursor.getString(2)));
             videoLog.setendedAt(iso8601Format.parse(cursor.getString(3)));               				
-			videoLog.setcreatedAt(iso8601Format.parse(cursor.getString(4)));
-			d = iso8601Format.parse(cursor.getString(2));
+			videoLog.setcreatedAt(iso8601Format.parse(cursor.getString(4)));			
         } catch (java.text.ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}                
-        videoLog.setvideoName(cursor.getString(1));
-        
+		}
 		videoLog.setVideoId(cursor.getString(5));  
 		return videoLog;
     }

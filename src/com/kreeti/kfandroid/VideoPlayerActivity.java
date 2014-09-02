@@ -42,7 +42,7 @@ public class VideoPlayerActivity extends BaseActivity {
 		String videoTitle = getIntent().getStringExtra("videoTitle");
 		DatabaseHandler dbHandler = new DatabaseHandler(context);		
 		Date day = new Date(System.currentTimeMillis());
-		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day, " abc");
+		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day, getIntent().getStringExtra("videoId"));
 		dbHandler.addVideoLog(vl);		
 		super.onBackPressed();		 
      } 

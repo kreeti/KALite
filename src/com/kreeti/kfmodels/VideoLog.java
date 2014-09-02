@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class VideoLog {
 	//private variables
-   private long id;
+   private String id;
    private String videoName;
    private java.util.Date startedAt;
    private java.util.Date endedAt;  
@@ -24,11 +24,11 @@ public class VideoLog {
 		// TODO Auto-generated constructor stub
 	}	
 	
-	public long id() {
+	public String id() {
 		return id;
 	}
-	public void setid(long l) {
-		this.id = l;
+	public void setid(String string) {
+		this.id = string;
 	}
 	public String videoId() {
 		return videoId;
