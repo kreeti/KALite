@@ -43,7 +43,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TopicListActivity extends BaseActivity{		
+public class TopicListActivity extends BaseActivity{
+	public static final int REQUEST_CODE = 6384;
+    public static final String TAG = "FileChooserActivity";
+    public static final String ADMIN_LOGRESET_PASSWORRD = "password";
+    public final String ERROR_MESSAGE_PASSWORD = "Password is wrong, Try again later!";    
+    public final String CHOOSER_MESSAGE ="Choose a JSON file";
+    public final String KFTITLE_MESSAGE = " - Kreeti Foundation";    
 	VideoModelNode rootNode;
     VideoModelNode currentNode;
     private String fileDirectoryVideoPath;

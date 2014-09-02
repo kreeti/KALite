@@ -8,9 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import com.kreeti.kfandroid.BaseActivity;
 import com.kreeti.kfandroid.DatabaseHandler;
 import com.kreeti.kfmodels.VideoLog;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.DatePickerDialog;
@@ -24,9 +26,14 @@ import android.widget.EditText;
 import au.com.bytecode.opencsv.CSVWriter;
 
 public class VideoLogReportActivity extends BaseActivity {
+	public final String LOG_REPORT_RECEIVER_EMAIL = "nbanerjee@kreeti.com";
+    public final String LOG_REPORT_EMAIL_BODY = "Hi, Please see the attached log";
+    public final String LOG_REPORT_EMAIL_SUBJECT = "Video log";
+    public final String ERROR_MESSAGE_RECHABILITY = "Please connect your device with internate!";
 	Context context;	
 	protected Date toDate;
-	protected Date fromDate;	
+	protected Date fromDate;
+	String zipFilePath;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -173,15 +180,23 @@ public class VideoLogReportActivity extends BaseActivity {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);		
 	    String currentDateandTime = sdf.format(Calendar.getInstance().getTime());	    
-		String zipFilePath = getIntent().getStringExtra("logFilePath") + currentDateandTime + "-log.zip";
+		zipFilePath = getIntent().getStringExtra("logFilePath") + currentDateandTime + "-log.zip";
 		zipFileAtPath(getIntent().getStringExtra("logFilePath") + "log.csv", zipFilePath);		
 		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(zipFilePath)));
 		
 		/* Send it off to the Activity-Chooser */
-		this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-		File csvFile = new File(getIntent().getStringExtra("logFilePath") + "log.csv");
-		csvFile.delete();
+		this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));	
+		
+		
 	}	
 	
-	
+	 public void onBackPressed() {
+		 /* Delete temp files */
+			File zipFile = new File(zipFilePath);
+			zipFile.delete();
+			File csvFile = new File(getIntent().getStringExtra("logFilePath") + "log.csv");
+			csvFile.delete();
+		 super.onBackPressed();	
+	 }
+		
 }

@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ParseException;
 
 public class DatabaseHandler extends SQLiteOpenHelper implements Constants{ 
+	public static final int DATABASE_VERSION = 1;
 	public static final String TABLE_LOGS = "videologs";    
     public static final String KEY_ID = "logId";
     public static final String VIDEO_ID = "videoId";
