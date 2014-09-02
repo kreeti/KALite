@@ -10,8 +10,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -116,4 +121,18 @@ public class BaseActivity extends Activity implements Constants{
 		  } else
 		   return true;
 		 }
+	
+	public Date getCurrentDateTime() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		Calendar cal = Calendar.getInstance();	
+		String ds = "2010-10-15T09:27:37Z";//dateFormat.format(cal.getTime());
+		Date d = null;
+		try {
+			d = (Date) dateFormat.parse(ds);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return d;
+	}
 }

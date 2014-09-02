@@ -56,8 +56,12 @@ public class VideoLogReportActivity extends BaseActivity {
 	                    			Calendar cal = Calendar.getInstance();
 	                    		    cal.set(Calendar.YEAR, year);
 	                    		    cal.set(Calendar.MONTH, monthOfYear);
-	                    		    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);	                    			
-	                    		    VideoLogReportActivity.this.fromDate = (Date) cal.getTime();	                    		  
+	                    		    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);	  
+	                    		    cal.set(Calendar.HOUR_OF_DAY, 0);
+	                    	        cal.set(Calendar.MINUTE, 0);
+	                    	        cal.set(Calendar.SECOND, 0);
+	                    	        cal.set(Calendar.MILLISECOND, 0);
+	                    		    VideoLogReportActivity.this.fromDate = Date.valueOf(date);	                    		  
 	                            }
 
 								
@@ -85,12 +89,8 @@ public class VideoLogReportActivity extends BaseActivity {
 	                                    int monthOfYear, int dayOfMonth) {
 	                            	String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
 	                            	EditText edittext = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);		    
-	                    			edittext.setText(date);
-	                    			Calendar cal = Calendar.getInstance();
-	                    		    cal.set(Calendar.YEAR, year);
-	                    		    cal.set(Calendar.MONTH, monthOfYear);
-	                    		    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);	                    			
-	                    		    VideoLogReportActivity.this.toDate = (Date) cal.getTime();	                    			
+	                    			edittext.setText(date);	                    			
+	                    		    VideoLogReportActivity.this.toDate = Date.valueOf(date);	                    			
 	                            }
 	                      }, mYear, mMonth, mDay);
 	                dpd.show();
@@ -146,23 +146,26 @@ public class VideoLogReportActivity extends BaseActivity {
 	public void generateCSVFile(String path, boolean isPartialLog) throws ParseException, IOException {
 		DatabaseHandler dbHandler = new DatabaseHandler(context);
 		EditText edittext2 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView2);
-		String toDate = edittext2.getText().toString();
+		//String toDate = edittext2.getText().toString();
 		EditText edittext1 = (EditText) VideoLogReportActivity.this.findViewById(R.id.editTextView1);
-		String fromDate = edittext1.getText().toString();
+		//String fromDate = edittext1.getText().toString();
 		List<VideoLog> videoLogList;
 		if(isPartialLog)
-			videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(Date.valueOf(fromDate), Date.valueOf(toDate));
+			videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(fromDate, toDate);
 		else
 			videoLogList = dbHandler.getAllVideoLogs();		
 		CSVWriter writer = new CSVWriter(new FileWriter(path + "log.csv"));
 		List<String[]> data = new ArrayList<String[]>();
 		for(VideoLog vl : videoLogList){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//Date d = vl.startedAt();
+			String s = sdf.format(vl.startedAt());
 			String[] obj = new String[4];
-			obj[0] = vl.get_videoName();
-			obj[1] = vl.get_startedAt();
-			obj[2] = vl.get_endedAt();			
-			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);	        			
-			obj[3] = sdf.format(vl.get_date());
+			obj[0] = vl.videoName();
+			obj[1] = sdf.format(vl.startedAt());
+			obj[2] = sdf.format(vl.endedAt());
+			obj[3] = sdf.format(vl.createdAt());
+			//obj[4] = vl.videoId();
 			data.add(obj);
 		}
 		writer.writeAll(data);
@@ -193,5 +196,6 @@ public class VideoLogReportActivity extends BaseActivity {
 		File csvFile = new File(getIntent().getStringExtra("logFilePath") + "log.csv");
 		csvFile.delete();
 	}	
+	
 	
 }

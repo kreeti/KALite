@@ -10,11 +10,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import org.json.JSONException;
+
 import com.example.kaliteandroid.R;
 import com.example.kaliteandroid.VideoLogReportActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -46,7 +53,8 @@ public class TopicListActivity extends BaseActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
+		//Date d = new Date(System.currentTimeMillis());
 		setContentView(R.layout.activity_child);    	
 		context = this;
     	dialog = ProgressDialog.show(this, "", "Loading...");
@@ -81,7 +89,7 @@ public class TopicListActivity extends BaseActivity{
 		            	if(file.exists()) {
 		            		Intent videoPlayerIntent = new Intent(TopicListActivity.this, VideoPlayerActivity.class);	
 				    		videoPlayerIntent.putExtra("videoFileName", fileDirectoryVideoPath + j.videoFileName());				    		 
-				    		videoPlayerIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace(VIDEOS_SUBDIR_PATH, ""));
+				    		videoPlayerIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
 				    		videoPlayerIntent.putExtra("videoTitle", j.title);
 				    		
 				    		TopicListActivity.this.startActivity(videoPlayerIntent);
@@ -214,7 +222,7 @@ public class TopicListActivity extends BaseActivity{
 		        JsonReader reader = new JsonReader(streamReader);  
 		    	parseJSON(reader);
 
-				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + VIDEOS_SUBDIR_PATH;
+				fileDirectoryVideoPath = path.replace(selectedFile.getName(), "") + "videos/";
 				 if(dialog != null) {
 		   		 dialog.dismiss();
 		   		 dialog = null;
@@ -242,7 +250,7 @@ public class TopicListActivity extends BaseActivity{
 	    switch (item.getItemId()) {
 	        case R.id.report:
 	        	Intent reportIntent = new Intent(TopicListActivity.this, VideoLogReportActivity.class);	
-	        	reportIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace(VIDEOS_SUBDIR_PATH, ""));
+	        	reportIntent.putExtra("logFilePath", fileDirectoryVideoPath.replace("videos/", ""));
 	        	TopicListActivity.this.startActivity(reportIntent);
 	            return true;	            
 	        case R.id.resetLog:

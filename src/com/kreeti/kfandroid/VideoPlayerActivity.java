@@ -16,8 +16,8 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 public class VideoPlayerActivity extends BaseActivity {
-	private String videoStartedAt;
-	private String videoEndedAt;
+	private Date videoStartedAt;
+	private Date videoEndedAt;
 	Context context;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
@@ -31,22 +31,18 @@ public class VideoPlayerActivity extends BaseActivity {
 		Uri vidFile = Uri.parse(fileName);
 		VideoView videoView = (VideoView) findViewById(R.id.videoView1);
 		videoView.setVideoURI(vidFile);
-		videoView.setMediaController(new MediaController(this));
-		SimpleDateFormat df = new SimpleDateFormat(TIME_FORMAT);
-		videoStartedAt = df.format(Calendar.getInstance().getTime());
+		videoView.setMediaController(new MediaController(this));		
+		videoStartedAt = new Date(System.currentTimeMillis());
 		videoView.start();
 	}	
 	
 	@Override 
-    public void onBackPressed() { 
-		SimpleDateFormat df = new SimpleDateFormat(TIME_FORMAT);
-		videoEndedAt = df.format(Calendar.getInstance().getTime());
+    public void onBackPressed() { 		
+		videoEndedAt = new Date(System.currentTimeMillis());
 		String videoTitle = getIntent().getStringExtra("videoTitle");
-		DatabaseHandler dbHandler = new DatabaseHandler(context);
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);	
-		String currentDateandTime = sdf.format(Calendar.getInstance().getTime());
-		Date day = Date.valueOf(currentDateandTime);
-		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day);
+		DatabaseHandler dbHandler = new DatabaseHandler(context);		
+		Date day = new Date(System.currentTimeMillis());
+		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day, " abc");
 		dbHandler.addVideoLog(vl);		
 		super.onBackPressed();		 
      } 

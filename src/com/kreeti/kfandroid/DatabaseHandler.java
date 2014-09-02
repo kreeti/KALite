@@ -3,16 +3,25 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.kreeti.kfmodels.VideoLog;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.ParseException;
 
 public class DatabaseHandler extends SQLiteOpenHelper implements Constants{ 
- 
+	public static final String TABLE_LOGS = "videologs";    
+    public static final String KEY_ID = "logId";
+    public static final String VIDEO_ID = "videoId";
+    public static final String KEY_NAME = "videoName";
+    public static final String KEY_STARTED_AT = "startedAt";
+    public static final String KEY_ENDED_AT = "endedAt";
+    public static final String CREATED_AT = "createdAt";
     public DatabaseHandler(Context context) {    
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -21,8 +30,8 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
     @Override
     public void onCreate(SQLiteDatabase db) {    	
         String CREATE_VIDEOLOG_TABLE = "CREATE TABLE " + TABLE_LOGS + "(" + KEY_ID
-        	      + " integer primary key autoincrement, " + KEY_NAME + " text,"
-                + KEY_STARTED_AT + " text," + KEY_ENDED_AT + " text," + KEY_DATE + " date" + ")";
+        	      + " integer primary key autoincrement, " + KEY_NAME + " text, "
+                + KEY_STARTED_AT + " datetime, " + KEY_ENDED_AT + " datetime, " + CREATED_AT + " datetime, " + VIDEO_ID + " text"+")";
         try{
         	db.execSQL(CREATE_VIDEOLOG_TABLE);
         }catch(SQLException e){
@@ -39,15 +48,14 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
     }
     
     public void addVideoLog(VideoLog log) {
-        SQLiteDatabase db = this.getWritableDatabase();     
-        ContentValues values = new ContentValues();
-        values.put(KEY_NAME, log.get_videoName()); 
-        values.put(KEY_STARTED_AT, log.get_startedAt());
-        values.put(KEY_ENDED_AT, log.get_endedAt());  
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDateandTime = sdf.format(log.get_date());		
-       // String currentDateandTime = sdf.format(Calendar.getInstance().getTime());       
-        values.put(KEY_DATE, currentDateandTime);     
+        SQLiteDatabase db = this.getWritableDatabase(); 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ContentValues values = new ContentValues();        
+        values.put(KEY_NAME, log.videoName()); 
+        values.put(KEY_STARTED_AT, sdf.format(log.startedAt()));
+        values.put(KEY_ENDED_AT, sdf.format(log.endedAt()));  
+        values.put(VIDEO_ID, log.videoId());             
+        values.put(CREATED_AT, sdf.format(log.createdAt()));     
         
         long rowNo = db.insert(TABLE_LOGS, null, values);
         db.close(); 
@@ -61,19 +69,27 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
                 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                VideoLog videoLog = new VideoLog();
+               /* VideoLog videoLog = new VideoLog();
                 String s = cursor.getString(1);
                 s = cursor.getString(2);
                 s = cursor.getString(3);
-                videoLog.set_videoName(cursor.getString(1));
-                videoLog.set_startedAt(cursor.getString(2));
-                videoLog.set_endedAt(cursor.getString(3));
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                Date convertedDate = null;
-				String str = cursor.getString(4);
-				//videoLog.day = str;				
-				videoLog.set_date(Date.valueOf(str));                               
-                VideoLogList.add(videoLog);
+                java.util.Date d = new Date(cursor.getLong(2));
+                
+                SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                	videoLog.setstartedAt(iso8601Format.parse(cursor.getString(2)));
+                    videoLog.setendedAt(iso8601Format.parse(cursor.getString(3)));               				
+    				videoLog.setcreatedAt(iso8601Format.parse(cursor.getString(4)));
+    				d = iso8601Format.parse(cursor.getString(2));
+                } catch (java.text.ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}                
+                videoLog.setvideoName(cursor.getString(1));
+                
+				videoLog.setVideoId(cursor.getString(5));  
+                VideoLogList.add(videoLog);*/
+            	VideoLogList.add(createLog(cursor));
             } while (cursor.moveToNext());
             cursor.close(); 
         }     
@@ -86,26 +102,41 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fDate = sdf.format(fromDate);
         String tDate = sdf.format(toDate);
-        String selectQuery = "SELECT * FROM " + TABLE_LOGS + " WHERE " + KEY_DATE + " BETWEEN date('"+fDate+"') AND date('"+tDate+"')";     
+        String selectQuery = "SELECT * FROM " + TABLE_LOGS + " WHERE " + CREATED_AT + " BETWEEN date('"+fDate+"') AND date('"+tDate+"')";     
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);  
                 
         if (cursor != null && cursor.moveToFirst()) {
-            do {
-                VideoLog videoLog = new VideoLog();
-                videoLog.set_videoName(cursor.getString(1));
-                videoLog.set_startedAt(cursor.getString(2));
-                videoLog.set_endedAt(cursor.getString(3));
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String str = cursor.getString(4);
-				//videoLog.day = str;				
-				videoLog.set_date(Date.valueOf(str));   
-                VideoLogList.add(videoLog);
+            do {            	
+                VideoLogList.add(createLog(cursor));
             } while (cursor.moveToNext());
             cursor.close(); 
         }  
         
         return VideoLogList;
+    }
+    
+    private VideoLog createLog(Cursor cursor) {
+    	VideoLog videoLog = new VideoLog();
+        String s = cursor.getString(1);
+        s = cursor.getString(2);
+        s = cursor.getString(3);
+        java.util.Date d = new Date(cursor.getLong(2));
+        
+        SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+        	videoLog.setstartedAt(iso8601Format.parse(cursor.getString(2)));
+            videoLog.setendedAt(iso8601Format.parse(cursor.getString(3)));               				
+			videoLog.setcreatedAt(iso8601Format.parse(cursor.getString(4)));
+			d = iso8601Format.parse(cursor.getString(2));
+        } catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}                
+        videoLog.setvideoName(cursor.getString(1));
+        
+		videoLog.setVideoId(cursor.getString(5));  
+		return videoLog;
     }
 	
 }

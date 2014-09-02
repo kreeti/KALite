@@ -4,17 +4,19 @@ import java.sql.Date;
 
 public class VideoLog {
 	//private variables
-   private long _id;
-   private String _videoName;
-   private String _startedAt;
-   private String _endedAt;
-   private Date _date;    
+   private long id;
+   private String videoName;
+   private java.util.Date startedAt;
+   private java.util.Date endedAt;  
+   private java.util.Date createdAt;
+   private String videoId;
     
-    public VideoLog(String videoTitle, String videoStartedAt, String videoEndedAt, Date l){
-    	this.set_videoName(videoTitle);
-        this.set_startedAt(videoStartedAt);
-        this.set_endedAt(videoEndedAt);
-        this.set_date(l);
+    public VideoLog(String videoTitle, java.util.Date videoStartedAt, java.util.Date videoEndedAt, java.util.Date createdAt, String videoId){
+    	this.setvideoName(videoTitle);
+        this.setstartedAt(videoStartedAt);
+        this.setendedAt(videoEndedAt); 
+        this.setcreatedAt(createdAt); 
+        this.setVideoId(videoId);
     }
     
     // Empty constructor
@@ -22,34 +24,41 @@ public class VideoLog {
 		// TODO Auto-generated constructor stub
 	}	
 	
-	public long get_id() {
-		return _id;
+	public long id() {
+		return id;
 	}
-	public void set_id(long l) {
-		this._id = l;
+	public void setid(long l) {
+		this.id = l;
 	}
-	public String get_videoName() {
-		return _videoName;
+	public String videoId() {
+		return videoId;
 	}
-	public void set_videoName(String _videoName) {
-		this._videoName = _videoName;
+	public void setVideoId(String videoId) {
+		this.videoId = videoId;
 	}
-	public String get_startedAt() {
-		return _startedAt;
+	public String videoName() {
+		return videoName;
 	}
-	public void set_startedAt(String _startedAt) {
-		this._startedAt = _startedAt;
+	public void setvideoName(String videoName) {
+		this.videoName = videoName;
 	}
-	public String get_endedAt() {
-		return _endedAt;
+	public java.util.Date startedAt() {
+		return startedAt;
 	}
-	public void set_endedAt(String _endedAt) {
-		this._endedAt = _endedAt;
+	public void setstartedAt(java.util.Date date) {
+		this.startedAt = date;
 	}
-	public Date get_date() {
-		return _date;
+	public java.util.Date endedAt() {
+		return endedAt;
 	}
-	public void set_date(Date date) {
-		this._date = date;
+	public void setendedAt(java.util.Date date) {
+		this.endedAt = date;
 	}
+	public java.util.Date createdAt() {
+		return createdAt;
+	}
+	public void setcreatedAt(java.util.Date createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 }
