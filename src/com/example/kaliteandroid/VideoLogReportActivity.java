@@ -8,11 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import com.kreeti.kfandroid.BaseActivity;
-import com.kreeti.kfandroid.DatabaseHandler;
+import com.kreeti.kfandroid.DatabaseManagementService;
 import com.kreeti.kfmodels.VideoLog;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.DatePickerDialog;
@@ -33,7 +31,7 @@ public class VideoLogReportActivity extends BaseActivity {
 	Context context;	
 	protected Date toDate;
 	protected Date fromDate;
-	String zipFilePath;
+	String zipFilePath = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -143,7 +141,7 @@ public class VideoLogReportActivity extends BaseActivity {
 	}
 	
 	public void generateCSVFile(String path, boolean isPartialLog) throws ParseException, IOException {
-		DatabaseHandler dbHandler = new DatabaseHandler(context);		
+		DatabaseManagementService dbHandler = new DatabaseManagementService(context);		
 		List<VideoLog> videoLogList;
 		if(isPartialLog)
 			videoLogList = dbHandler.getAllVideoLogsBetweenTwoDates(fromDate, toDate);
@@ -186,16 +184,17 @@ public class VideoLogReportActivity extends BaseActivity {
 		
 		/* Send it off to the Activity-Chooser */
 		this.startActivity(Intent.createChooser(emailIntent, "Send mail..."));	
-		
+		 File csvFile = new File(getIntent().getStringExtra("logFilePath") + "log.csv");			 
+		 if(csvFile.exists())csvFile.delete();
 		
 	}	
 	
 	 public void onBackPressed() {
 		 /* Delete temp files */
-			File zipFile = new File(zipFilePath);
-			zipFile.delete();
-			File csvFile = new File(getIntent().getStringExtra("logFilePath") + "log.csv");
-			csvFile.delete();
+		 if(zipFilePath != null){
+			 File zipFile = new File(zipFilePath);				
+			 if(zipFile.exists())zipFile.delete();
+		 }			
 		 super.onBackPressed();	
 	 }
 		

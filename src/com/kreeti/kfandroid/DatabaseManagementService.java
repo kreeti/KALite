@@ -3,18 +3,15 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.kreeti.kfmodels.VideoLog;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.ParseException;
 
-public class DatabaseHandler extends SQLiteOpenHelper implements Constants{ 
+public class DatabaseManagementService extends SQLiteOpenHelper implements Constants{ 
 	public static final int DATABASE_VERSION = 1;
 	public static final String TABLE_LOGS = "videologs";    
     public static final String KEY_ID = "logId";
@@ -23,7 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Constants{
     public static final String KEY_STARTED_AT = "startedAt";
     public static final String KEY_ENDED_AT = "endedAt";
     public static final String CREATED_AT = "createdAt";
-    public DatabaseHandler(Context context) {    
+    public DatabaseManagementService(Context context) {    
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
     } 

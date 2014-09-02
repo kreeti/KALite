@@ -40,7 +40,7 @@ public class VideoPlayerActivity extends BaseActivity {
     public void onBackPressed() { 		
 		videoEndedAt = new Date(System.currentTimeMillis());
 		String videoTitle = getIntent().getStringExtra("videoTitle");
-		DatabaseHandler dbHandler = new DatabaseHandler(context);		
+		DatabaseManagementService dbHandler = new DatabaseManagementService(context);		
 		Date day = new Date(System.currentTimeMillis());
 		VideoLog vl = new VideoLog(videoTitle, videoStartedAt, videoEndedAt, day, getIntent().getStringExtra("videoId"));
 		dbHandler.addVideoLog(vl);		
