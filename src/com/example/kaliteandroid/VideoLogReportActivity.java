@@ -190,12 +190,23 @@ public class VideoLogReportActivity extends BaseActivity {
 	}	
 	
 	 public void onBackPressed() {
+		 deleteTempZipFile();	
+		 super.onBackPressed();	
+	 }
+	 
+	 @Override
+	 public void onResume()	 {
+		 deleteTempZipFile();
+	     super.onResume();
+	    
+	 }	
+	 
+	 public void deleteTempZipFile() {
 		 /* Delete temp files */
 		 if(zipFilePath != null){
 			 File zipFile = new File(zipFilePath);				
 			 if(zipFile.exists())zipFile.delete();
-		 }			
-		 super.onBackPressed();	
+		 }		
 	 }
 		
 }
