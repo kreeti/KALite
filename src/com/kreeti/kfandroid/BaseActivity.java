@@ -9,21 +9,14 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 public class BaseActivity extends Activity implements Constants{
 	
@@ -35,10 +28,7 @@ public class BaseActivity extends Activity implements Constants{
 	        BufferedInputStream origin = null;
 	        FileOutputStream dest = new FileOutputStream(toLocation);
 	        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
-	                dest));
-	        if (sourceFile.isDirectory()) {
-	            zipSubFolder(out, sourceFile, sourceFile.getParent().length());
-	        } else {
+	                dest));	       
 	            byte data[] = new byte[BUFFER];
 	            FileInputStream fi = new FileInputStream(sourcePath);
 	            origin = new BufferedInputStream(fi, BUFFER);
@@ -46,8 +36,7 @@ public class BaseActivity extends Activity implements Constants{
 	            out.putNextEntry(entry);
 	            int count;
 	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
-	                out.write(data, 0, count);
-	            }
+	                out.write(data, 0, count);	            
 	        }
 	        out.close();
 	    } catch (Exception e) {
@@ -57,34 +46,6 @@ public class BaseActivity extends Activity implements Constants{
 	    return true;
 	}
 	
-	private void zipSubFolder(ZipOutputStream out, File folder,
-	        int basePathLength) throws IOException {
-
-	    final int BUFFER = 2048;
-
-	    File[] fileList = folder.listFiles();
-	    BufferedInputStream origin = null;
-	    for (File file : fileList) {
-	        if (file.isDirectory()) {
-	            zipSubFolder(out, file, basePathLength);
-	        } else {
-	            byte data[] = new byte[BUFFER];
-	            String unmodifiedFilePath = file.getPath();
-	            String relativePath = unmodifiedFilePath
-	                    .substring(basePathLength);
-	            Log.i("ZIP SUBFOLDER", "Relative Path : " + relativePath);
-	            FileInputStream fi = new FileInputStream(unmodifiedFilePath);
-	            origin = new BufferedInputStream(fi, BUFFER);
-	            ZipEntry entry = new ZipEntry(relativePath);
-	            out.putNextEntry(entry);
-	            int count;
-	            while ((count = origin.read(data, 0, BUFFER)) != -1) {
-	                out.write(data, 0, count);
-	            }
-	            origin.close();
-	        }
-	    }
-	}
 
 	/*
 	 * gets the last path component
